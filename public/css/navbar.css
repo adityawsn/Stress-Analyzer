@@ -1,0 +1,13 @@
+/* NAVBAR */
+.navbar-custom {
+    background: #FFE3B0;
+    backdrop-filter: blur(10px);
+}
+
+/* TEXT NAVBAR */
+.navbar-nav .nav-link {
+    /* font-size: 1.1rem;
+    font-weight: 500; */
+    margin-left: 25px;
+}
+
