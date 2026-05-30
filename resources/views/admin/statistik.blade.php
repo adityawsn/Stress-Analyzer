@@ -144,8 +144,8 @@
                             <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Tekanan (X1)</small>
                             <i class="bi bi-exclamation-circle text-danger"></i>
                         </div>
-                        <h3 class="fw-bold mb-0">72.4</h3>
-                        <p class="small text-muted mb-0">Indikator: Revisi Berulang</p>
+                        <h3 class="fw-bold mb-0">{{ number_format($mean_tps, 2) }}</h3>
+                        <p class="small text-muted mb-0">Nilai rata-rata tekanan skripsi</p>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -154,28 +154,71 @@
                             <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Manajemen (X2)</small>
                             <i class="bi bi-clock text-primary"></i>
                         </div>
-                        <h3 class="fw-bold mb-0">58.1</h3>
-                        <p class="small text-muted mb-0">Indikator: Prokrastinasi</p>
+                        <h3 class="fw-bold mb-0">{{ number_format($mean_mw, 2) }}</h3>
+                        <p class="small text-muted mb-0">Nilai rata-rata manajemen waktu</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Akurasi Tsukamoto</small>
-                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Tsukamoto</small>
+                            <i class="bi bi-bar-chart-line text-success"></i>
                         </div>
-                        <h3 class="fw-bold mb-0">81.0%</h3>
-                        <p class="small text-muted mb-0">Berdasarkan data uji</p>
+                        <h3 class="fw-bold mb-0">{{ number_format($mean_tsukamoto, 2) }}%</h3>
+                        <p class="small text-muted mb-0">Rata-rata output inferensi</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Akurasi Mamdani</small>
-                            <i class="bi bi-check-circle-fill text-info"></i>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Mamdani</small>
+                            <i class="bi bi-bar-chart-line text-info"></i>
                         </div>
-                        <h3 class="fw-bold mb-0">80.5%</h3>
-                        <p class="small text-muted mb-0">Selisih defuzzifikasi</p>
+                        <h3 class="fw-bold mb-0">{{ number_format($mean_mamdani, 2) }}%</h3>
+                        <p class="small text-muted mb-0">Rata-rata output inferensi</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card data-card border-0 shadow-sm">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi (X1)</small>
+                            <i class="bi bi-percent text-warning"></i>
+                        </div>
+                        <h3 class="fw-bold mb-0">{{ number_format($std_tps, 2) }}</h3>
+                        <p class="small text-muted mb-0">Variasi tekanan skripsi</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card data-card border-0 shadow-sm">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi (X2)</small>
+                            <i class="bi bi-percent text-warning"></i>
+                        </div>
+                        <h3 class="fw-bold mb-0">{{ number_format($std_mw, 2) }}</h3>
+                        <p class="small text-muted mb-0">Variasi manajemen waktu</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card data-card border-0 shadow-sm">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi Tsukamoto</small>
+                            <i class="bi bi-percent text-warning"></i>
+                        </div>
+                        <h3 class="fw-bold mb-0">{{ number_format($std_tsukamoto, 2) }}</h3>
+                        <p class="small text-muted mb-0">Variasi output Tsukamoto</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card data-card border-0 shadow-sm">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi Mamdani</small>
+                            <i class="bi bi-percent text-warning"></i>
+                        </div>
+                        <h3 class="fw-bold mb-0">{{ number_format($std_mamdani, 2) }}</h3>
+                        <p class="small text-muted mb-0">Variasi output Mamdani</p>
                     </div>
                 </div>
             </div>
@@ -261,30 +304,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="ps-3">Sampel #01 (Budi)</td>
-                                <td>85 (Tinggi)</td>
-                                <td>30 (Buruk)</td>
-                                <td class="fw-bold">88.50</td>
-                                <td class="fw-bold text-muted">87.20</td>
-                                <td class="text-end pe-3"><span class="badge bg-danger">STRES TINGGI</span></td>
-                            </tr>
-                            <tr>
-                                <td class="ps-3">Sampel #02 (Anita)</td>
-                                <td>50 (Sedang)</td>
-                                <td>60 (Cukup)</td>
-                                <td class="fw-bold">55.00</td>
-                                <td class="fw-bold text-muted">54.80</td>
-                                <td class="text-end pe-3"><span class="badge bg-warning text-dark">STRES SEDANG</span></td>
-                            </tr>
-                            <tr>
-                                <td class="ps-3">Sampel #03 (Rizky)</td>
-                                <td>20 (Rendah)</td>
-                                <td>80 (Baik)</td>
-                                <td class="fw-bold">22.15</td>
-                                <td class="fw-bold text-muted">25.00</td>
-                                <td class="text-end pe-3"><span class="badge bg-success">STRES RENDAH</span></td>
-                            </tr>
+                            @forelse($samples as $sample)
+                                <tr>
+                                    <td class="ps-3">{{ $sample['name'] }}</td>
+                                    <td>{{ number_format($sample['tps'], 2) }} ({{ $sample['tps'] >= 70 ? 'Tinggi' : ($sample['tps'] >= 30 ? 'Sedang' : 'Rendah') }})</td>
+                                    <td>{{ number_format($sample['mw'], 2) }} ({{ $sample['mw'] >= 70 ? 'Baik' : ($sample['mw'] >= 30 ? 'Cukup' : 'Buruk') }})</td>
+                                    <td class="fw-bold">{{ number_format($sample['tsukamoto'], 2) }}</td>
+                                    <td class="fw-bold text-muted">{{ number_format($sample['mamdani'], 2) }}</td>
+                                    <td class="text-end pe-3">
+                                        <span class="badge bg-{{ $sample['category'] === 'Tinggi' ? 'danger' : ($sample['category'] === 'Sedang' ? 'warning text-dark' : 'success') }}">STRES {{ strtoupper($sample['category']) }}</span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">Tidak ada data kuesioner tersedia.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -329,11 +364,11 @@
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Mhs 1', 'Mhs 2', 'Mhs 3', 'Mhs 4', 'Mhs 5', 'Mhs 6', 'Mhs 7'],
+                labels: @json($chart_labels),
                 datasets: [
                     {
                         label: 'Tsukamoto (Weighted Avg)',
-                        data: [88, 55, 22, 90, 45, 60, 30],
+                        data: @json($chart_tsukamoto),
                         borderColor: '#3b82f6',
                         backgroundColor: 'transparent',
                         tension: 0.3,
@@ -341,7 +376,7 @@
                     },
                     {
                         label: 'Mamdani (Centroid)',
-                        data: [87, 54, 25, 89, 48, 58, 35],
+                        data: @json($chart_mamdani),
                         borderColor: '#a855f7',
                         backgroundColor: 'transparent',
                         borderDash: [5, 5],

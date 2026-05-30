@@ -106,7 +106,7 @@ def hitung_tsukamoto(tps, mw):
         value = sum(r * z for r, z in zip(rules, z_values)) / alpha_sum
 
     value = round(value, 2)
-    kategori = "Rendah" if value < 30 else ("Sedang" if value <= 70 else "Tinggi")
+    kategori = "Rendah" if value <= 30 else ("Sedang" if value <= 70 else "Tinggi")
 
     return {"nilai": value, "kategori": kategori}
 

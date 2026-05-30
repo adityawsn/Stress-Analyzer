@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\QuestionnaireController;
+use App\Http\Controllers\Admin\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,18 +108,16 @@ Route::get('/hasil/mamdani-image', function (Request $request) {
 });
 
 
-Route::get('/dashboard', function () {
-    return view('admin.index');
-});
+
+
+Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::get('/data-mahasiswa', [StudentController::class, 'index']);
 route::get('/pengaturan-fuzzy', function () {
     return view('admin.setting.index');
 });
 route::get('/hasil-kuesioner', [ResultController::class, 'index']);
 route::get('/hasil-kuesioner/{id}/detail', [ResultController::class, 'detail']);
-route::get('/analisis-statistik', function () {
-    return view('admin.statistik');
-});
+Route::get('/analisis-statistik', [DashboardController::class, 'statistics']);
 
 route::get('/login', function () {
     return view('auth.login');
