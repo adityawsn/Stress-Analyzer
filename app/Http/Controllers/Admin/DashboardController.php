@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\QuestionnaireSubmission;
 use Illuminate\Support\Facades\Cache;
 
@@ -35,49 +34,25 @@ class DashboardController extends Controller
         $donut_ts = ['Rendah' => 0, 'Sedang' => 0, 'Tinggi' => 0];
         $donut_mm = ['Rendah' => 0, 'Sedang' => 0, 'Tinggi' => 0];
 
-        $script = base_path('python/fuzzy_calculator.py');
-
         foreach ($subs as $index => $s) {
             $labels[] = 'Mahasiswa ' . ($index + 1);
 
-            $cacheKey = 'fuzzy_result:' . $s->id;
-            $json = Cache::remember($cacheKey, 60 * 24, function () use ($script, $s) {
-                $tps = floatval($s->tps);
-                $mw = floatval($s->mw);
-                $cmd = 'python ' . escapeshellarg($script) . ' calculate ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
-                $output = null;
-                $retval = null;
-                exec($cmd, $output, $retval);
-                if ($retval === 0 && !empty($output)) {
-                    $decoded = json_decode(implode('', $output), true);
-                    return is_array($decoded) ? $decoded : null;
-                }
-                return null;
-            });
+            $result = $this->getFuzzyResult($s);
+            $tsVal = floatval($result['tsukamoto']['nilai'] ?? 0);
+            $mmVal = floatval($result['mamdani']['nilai'] ?? 0);
 
-            $tsVal = null;
-            $mmVal = null;
-            if (is_array($json)) {
-                $tsVal = $json['tsukamoto']['nilai'] ?? null;
-                $mmVal = $json['mamdani']['nilai'] ?? null;
-                $tsKat = null;
-                if ($tsVal !== null) {
-                    $tsKat = $this->getCategory($tsVal);
-                }
-                $mmKat = null;
-                if ($mmVal !== null) {
-                    $mmKat = $this->getCategory($mmVal);
-                }
-                if ($tsKat && isset($donut_ts[$tsKat])) {
-                    $donut_ts[$tsKat]++;
-                }
-                if ($mmKat && isset($donut_mm[$mmKat])) {
-                    $donut_mm[$mmKat]++;
-                }
+            $tsukamoto[] = $tsVal;
+            $mamdani[] = $mmVal;
+
+            $tsKat = $this->getCategory($tsVal);
+            $mmKat = $this->getCategory($mmVal);
+
+            if (isset($donut_ts[$tsKat])) {
+                $donut_ts[$tsKat]++;
             }
-
-            $tsukamoto[] = $tsVal ?? 0;
-            $mamdani[] = $mmVal ?? 0;
+            if (isset($donut_mm[$mmKat])) {
+                $donut_mm[$mmKat]++;
+            }
         }
 
         return view('admin.index', [
@@ -103,8 +78,8 @@ class DashboardController extends Controller
         $mean_tps = $total > 0 ? round($subs->avg('tps'), 2) : 0;
         $mean_mw = $total > 0 ? round($subs->avg('mw'), 2) : 0;
 
-        $tpsValues = $subs->pluck('tps')->map(fn ($value) => floatval($value))->toArray();
-        $mwValues = $subs->pluck('mw')->map(fn ($value) => floatval($value))->toArray();
+        $tpsValues = $subs->pluck('tps')->map(fn($value) => floatval($value))->toArray();
+        $mwValues = $subs->pluck('mw')->map(fn($value) => floatval($value))->toArray();
 
         $labels = [];
         $tsukamotoValues = [];
@@ -131,6 +106,100 @@ class DashboardController extends Controller
             ];
         }
 
+        // Demographics: jenis kelamin, usia (bucket), dan jenjang
+        $genderCounts = $subs->groupBy('gender')->map->count()->toArray();
+
+        $orderedGender = [
+            'Laki-laki' => $genderCounts['L'] ?? 0,
+            'Perempuan' => $genderCounts['P'] ?? 0,
+        ];
+
+        $gender_labels = array_keys($orderedGender);
+        $gender_values = array_values($orderedGender);
+
+        // Distribusi usia
+        $ageCounts = $subs
+            ->filter(fn($s) => !empty($s->umur))
+            ->groupBy('umur')
+            ->map->count()
+            ->sortKeys()
+            ->toArray();
+
+        $age_labels = array_keys($ageCounts);
+        $age_values = array_values($ageCounts);
+
+        // Jenjang counts
+        $jenjangCounts = $subs->groupBy('jenjang')->map->count()->toArray();
+        $orderedJenjang = [
+            'D3' => $jenjangCounts['D3'] ?? 0,
+            'D4/S1' => $jenjangCounts['D4 / S1'] ?? 0,
+        ];
+        $jenjang_labels = array_keys($orderedJenjang);
+        $jenjang_values = array_values($orderedJenjang);
+
+        // Status counts (proses / selesai)
+$statusCounts = $subs->groupBy('status')->map->count()->toArray();
+
+$orderedStatus = [
+    'Dalam Proses' => $statusCounts['proses'] ?? 0,
+    'Selesai' => $statusCounts['selesai'] ?? 0,
+];
+
+$status_labels = array_keys($orderedStatus);
+$status_values = array_values($orderedStatus);
+
+        // Year counts
+        $yearCounts = $subs->groupBy('tahun')->map->count()->sortKeys()->toArray();
+        $year_labels = array_keys($yearCounts);
+        $year_values = array_values($yearCounts);
+
+        // Status by year (stacked) - prepare arrays aligned with year_labels
+        $status_by_year_proses = [];
+        $status_by_year_selesai = [];
+        foreach ($year_labels as $y) {
+            $status_by_year_proses[] = isset($yearCounts[$y]) ? $subs->where('tahun', $y)->where('status', 'proses')->count() : 0;
+            $status_by_year_selesai[] = isset($yearCounts[$y]) ? $subs->where('tahun', $y)->where('status', 'selesai')->count() : 0;
+        }
+
+        // Top stressor counts from answers (q1..q10)
+        $questions = [
+            'q1' => 'Kesulitan menentukan judul (X1)',
+            'q2' => 'Kesulitan bimbingan dengan dosen (X1)',
+            'q3' => 'Beban revisi (X1)',
+            'q4' => 'Tuntutan lulus tepat waktu (X1)',
+            'q5' => 'Kecemasan terhadap hasil akhir (X1)',
+            'q6' => 'Perencanaan Jadwal (X2)',
+            'q7' => 'Kedisiplinan mengerjakan skripsi (X2)',
+            'q8' => 'Kemampuan menentukan prioritas (X2)',
+            'q9' => 'Konsistensi pengerjaan (X2)',
+            'q10' => 'Mengendalikan kebiasaan menunda (X2)',
+        ];
+        $stressorSums = array_fill_keys(array_keys($questions), 0.0);
+        $stressorCounts = array_fill_keys(array_keys($questions), 0);
+        foreach ($subs as $s) {
+            $ans = (array) $s->answers;
+            foreach ($questions as $qk => $label) {
+                if (isset($ans[$qk]) && is_numeric($ans[$qk])) {
+                    $val = floatval($ans[$qk]);
+                    // q1-q5: higher = more stress; q6-q10: lower = more stress -> invert
+                    if (in_array($qk, ['q6', 'q7', 'q8', 'q9', 'q10'], true)) {
+                        $val = 6 - $val; // assuming scale 1..5
+                    }
+                    $stressorSums[$qk] += $val;
+                    $stressorCounts[$qk]++;
+                }
+            }
+        }
+
+        $topStressors = [];
+        foreach ($questions as $qk => $label) {
+            $avg = $stressorCounts[$qk] ? $stressorSums[$qk] / $stressorCounts[$qk] : 0;
+            $pct = (int) round($avg / 5 * 100);
+            $topStressors[] = ['key' => $qk, 'label' => $label, 'average' => round($avg, 2), 'percentage' => $pct];
+        }
+        usort($topStressors, fn($a, $b) => $b['percentage'] <=> $a['percentage']);
+        $topStressors = array_slice($topStressors, 0, 5);
+
         $mean_tsukamoto = $this->safeMean($tsukamotoValues);
         $mean_mamdani = $this->safeMean($mamdaniValues);
         $std_tps = $this->safeStandardDeviation($tpsValues, $mean_tps);
@@ -152,6 +221,21 @@ class DashboardController extends Controller
             'chart_tsukamoto' => $tsukamotoValues,
             'chart_mamdani' => $mamdaniValues,
             'samples' => $samples,
+            // demographics for charts
+            'gender_labels' => $gender_labels,
+            'gender_values' => $gender_values,
+            'age_labels' => $age_labels,
+            'age_values' => $age_values,
+            'jenjang_labels' => $jenjang_labels,
+            'jenjang_values' => $jenjang_values,
+            // status & year
+            'status_labels' => $status_labels,
+            'status_values' => $status_values,
+            'year_labels' => $year_labels,
+            'year_values' => $year_values,
+            'status_by_year_proses' => $status_by_year_proses,
+            'status_by_year_selesai' => $status_by_year_selesai,
+            'top_stressors' => $topStressors,
         ]);
     }
 

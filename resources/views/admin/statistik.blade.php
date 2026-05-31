@@ -3,66 +3,14 @@
 @section('content')
 
     <style>
-        /* :root {
-            --sidebar-width: 260px;
-            --primary-color: #3b82f6;
-            --accent-yellow: #fff9e6;
-            --soft-blue: #e0f2fe;
-            --polindra-blue: #003399;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8fafc;
-        } */
-
         /* Sidebar Styling */
-        /* #sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            background: #ffffff;
-            border-right: 1px solid #e2e8f0;
-            z-index: 1000;
-            transition: all 0.3s;
-        }
 
-        .sidebar-header {
-            padding: 20px;
-            background-color: var(--accent-yellow);
-            border-bottom: 1px solid #ffeeba;
-        }
-
-        .nav-link {
-            padding: 12px 20px;
-            color: #64748b;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.2s;
-            border-radius: 8px;
-            margin: 4px 12px;
-        }
-
-        .nav-link:hover {
-            background-color: var(--soft-blue);
-            color: var(--primary-color);
-        }
-
-        .nav-link.active {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 500;
-        }
-
-        /* Main Content */
         #main-content {
             margin-left: var(--sidebar-width);
             padding: 20px;
             min-height: 100vh;
         }
+
 
         .top-nav {
             background: white;
@@ -81,12 +29,6 @@
             padding: 20px;
         }
 
-        .ai-btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            color: white;
-            border: none;
-        }
-
         .progress-custom {
             height: 8px;
             border-radius: 10px;
@@ -99,9 +41,17 @@
         }
 
         @media (max-width: 991.98px) {
-            #sidebar { left: -260px; }
-            #sidebar.active { left: 0; }
-            #main-content { margin-left: 0; }
+            #sidebar {
+                left: -260px;
+            }
+
+            #sidebar.active {
+                left: 0;
+            }
+
+            #main-content {
+                margin-left: 0;
+            }
         }
     </style>
 
@@ -119,20 +69,18 @@
                     <p class="mb-0 fw-semibold" style="font-size: 14px;">Admin</p>
                     <small class="text-muted" style="font-size: 12px;">Sistem StressAnalyzer</small>
                 </div>
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aditya" alt="Avatar" class="rounded-circle border" width="40" height="40">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Aditya" alt="Avatar"
+                    class="rounded-circle border" width="40" height="40">
             </div>
         </header>
 
         <div class="container-fluid py-4">
-            <div class="row mb-4">
-                <div class="col-md-8">
-                    <h4 class="fw-bold mb-0">Analisis Komparatif (Tsukamoto vs Mamdani)</h4>
-                    <p class="text-muted small">Statistik korelasi variabel X1 (Tekanan) dan X2 (Manajemen Waktu) terhadap Stres.</p>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <button class="btn ai-btn rounded-pill px-4 shadow-sm" onclick="analyzeThesisGap()">
-                        <i class="bi bi-stars"></i> Rekomendasi AI ✨
-                    </button>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-0">Analisis Statistik Tingkat Stres Mahasiswa</h4>
+                    <p class="text-muted small mb-0">
+                        Perbandingan Metode Fuzzy Tsukamoto dan Mamdani.
+                    </p>
                 </div>
             </div>
 
@@ -141,7 +89,8 @@
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Tekanan (X1)</small>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Tekanan
+                                (X1)</small>
                             <i class="bi bi-exclamation-circle text-danger"></i>
                         </div>
                         <h3 class="fw-bold mb-0">{{ number_format($mean_tps, 2) }}</h3>
@@ -151,7 +100,8 @@
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Manajemen (X2)</small>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Manajemen
+                                (X2)</small>
                             <i class="bi bi-clock text-primary"></i>
                         </div>
                         <h3 class="fw-bold mb-0">{{ number_format($mean_mw, 2) }}</h3>
@@ -161,7 +111,8 @@
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Tsukamoto</small>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata
+                                Tsukamoto</small>
                             <i class="bi bi-bar-chart-line text-success"></i>
                         </div>
                         <h3 class="fw-bold mb-0">{{ number_format($mean_tsukamoto, 2) }}%</h3>
@@ -184,7 +135,8 @@
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi (X1)</small>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi
+                                (X1)</small>
                             <i class="bi bi-percent text-warning"></i>
                         </div>
                         <h3 class="fw-bold mb-0">{{ number_format($std_tps, 2) }}</h3>
@@ -194,7 +146,8 @@
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi (X2)</small>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi
+                                (X2)</small>
                             <i class="bi bi-percent text-warning"></i>
                         </div>
                         <h3 class="fw-bold mb-0">{{ number_format($std_mw, 2) }}</h3>
@@ -204,7 +157,8 @@
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi Tsukamoto</small>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi
+                                Tsukamoto</small>
                             <i class="bi bi-percent text-warning"></i>
                         </div>
                         <h3 class="fw-bold mb-0">{{ number_format($std_tsukamoto, 2) }}</h3>
@@ -214,7 +168,8 @@
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi Mamdani</small>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Standar Deviasi
+                                Mamdani</small>
                             <i class="bi bi-percent text-warning"></i>
                         </div>
                         <h3 class="fw-bold mb-0">{{ number_format($std_mamdani, 2) }}</h3>
@@ -223,211 +178,349 @@
                 </div>
             </div>
 
-            <!-- Charts Row -->
+            <!-- Demographics Row (Gender / Age / Jenjang) -->
             <div class="row g-4 mb-4">
-                <div class="col-lg-7">
+                <div class="col-lg-4">
                     <div class="card data-card border-0 shadow-sm h-100">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h6 class="fw-bold mb-0">Distribusi Skor Stres (Tsukamoto vs Mamdani)</h6>
-                            <div class="btn-group btn-group-sm">
-                                <button class="btn btn-outline-secondary active">7 Hari</button>
-                                <button class="btn btn-outline-secondary">30 Hari</button>
-                            </div>
-                        </div>
-                        <div style="height: 300px;">
-                            <canvas id="comparisonChart"></canvas>
+                        <h6 class="fw-bold mb-3">Distribusi Jenis Kelamin</h6>
+                        <div style="height:220px;">
+                            <canvas id="genderChart"></canvas>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5">
+                <div class="col-lg-4">
+                    <div class="card data-card border-0 shadow-sm h-100">
+                        <h6 class="fw-bold mb-3">Distribusi Usia</h6>
+                        <div style="height:220px;">
+                            <canvas id="ageChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card data-card border-0 shadow-sm h-100">
+                        <h6 class="fw-bold mb-3">Distribusi Jenjang</h6>
+                        <div style="height:220px;">
+                            <canvas id="jenjangChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row g-4 mb-2">
+                <div class="col-lg-3">
+                    <div class="card data-card border-0 shadow-sm h-100">
+                        <h6 class="fw-bold mb-3">Distribusi Status Penyusunan</h6>
+                        <div style="height:220px;">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card data-card border-0 shadow-sm h-100">
+                        <h6 class="fw-bold mb-3">Distribusi Tahun Penyusunan</h6>
+                        <div style="height:220px;">
+                            <canvas id="yearChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
                     <div class="card data-card border-0 shadow-sm h-100">
                         <h6 class="fw-bold mb-4">Top Stresor (Indikator X1 & X2)</h6>
+                        @php $colors = ['bg-danger','bg-warning','bg-info','bg-success']; @endphp
                         <div class="space-y-4">
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <small>Kesulitan Bimbingan (X1.2)</small>
-                                    <small class="fw-bold">78%</small>
+                            @foreach ($top_stressors as $stressor)
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <small>{{ $stressor['label'] }}</small>
+                                        <small class="fw-bold">{{ $stressor['percentage'] }}%</small>
+                                    </div>
+                                    <div class="progress progress-custom">
+                                        <div class="progress-bar {{ $colors[$loop->index] ?? 'bg-secondary' }}"
+                                            style="width: {{ $stressor['percentage'] }}%"></div>
+                                    </div>
                                 </div>
-                                <div class="progress progress-custom">
-                                    <div class="progress-bar bg-danger" style="width: 78%"></div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <small>Beban Revisi (X1.3)</small>
-                                    <small class="fw-bold">65%</small>
-                                </div>
-                                <div class="progress progress-custom">
-                                    <div class="progress-bar bg-warning" style="width: 65%"></div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <small>Manajemen Prioritas (X2.3)</small>
-                                    <small class="fw-bold">55%</small>
-                                </div>
-                                <div class="progress progress-custom">
-                                    <div class="progress-bar bg-info" style="width: 55%"></div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <small>Kesulitan Judul (X1.1)</small>
-                                    <small class="fw-bold">30%</small>
-                                </div>
-                                <div class="progress progress-custom">
-                                    <div class="progress-bar bg-success" style="width: 30%"></div>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
-                        <div class="mt-4 p-3 bg-light rounded-3">
-                            <small class="text-muted d-block fw-bold"><i class="bi bi-info-circle-fill"></i> Sesuai Tabel 3.1 Proposal:</small>
-                            <small class="text-muted">Variabel X1 menunjukkan pengaruh lebih besar terhadap Stres Tinggi dibandingkan X2 pada sampel saat ini.</small>
-                        </div>
+                        {{-- <div class="mt-4 p-3 bg-light rounded-3">
+                            <small class="text-muted d-block fw-bold"><i class="bi bi-info-circle-fill"></i> Sesuai Tabel
+                                3.1 Proposal:</small>
+                            <small class="text-muted">Variabel X1 menunjukkan pengaruh lebih besar terhadap Stres Tinggi
+                                dibandingkan X2 pada sampel saat ini.</small>
+                        </div> --}}
                     </div>
-                </div>
-            </div>
-
-            <!-- Table of Comparison Samples -->
-            <div class="card data-card border-0 shadow-sm">
-                <h6 class="fw-bold mb-3">Sampel Hasil Inferensi (Komparatif)</h6>
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" style="font-size: 14px;">
-                        <thead class="bg-light">
-                            <tr class="text-muted">
-                                <th class="ps-3">Mahasiswa</th>
-                                <th>X1 (Skripsi)</th>
-                                <th>X2 (Waktu)</th>
-                                <th>Z (Tsukamoto)</th>
-                                <th>Z (Mamdani)</th>
-                                <th class="text-end pe-3">Kategori</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($samples as $sample)
-                                <tr>
-                                    <td class="ps-3">{{ $sample['name'] }}</td>
-                                    <td>{{ number_format($sample['tps'], 2) }} ({{ $sample['tps'] >= 70 ? 'Tinggi' : ($sample['tps'] >= 30 ? 'Sedang' : 'Rendah') }})</td>
-                                    <td>{{ number_format($sample['mw'], 2) }} ({{ $sample['mw'] >= 70 ? 'Baik' : ($sample['mw'] >= 30 ? 'Cukup' : 'Buruk') }})</td>
-                                    <td class="fw-bold">{{ number_format($sample['tsukamoto'], 2) }}</td>
-                                    <td class="fw-bold text-muted">{{ number_format($sample['mamdani'], 2) }}</td>
-                                    <td class="text-end pe-3">
-                                        <span class="badge bg-{{ $sample['category'] === 'Tinggi' ? 'danger' : ($sample['category'] === 'Sedang' ? 'warning text-dark' : 'success') }}">STRES {{ strtoupper($sample['category']) }}</span>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center text-muted py-4">Tidak ada data kuesioner tersedia.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- AI Modal -->
-    <div class="modal fade" id="aiModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0">
-                <div class="modal-header ai-btn border-0 text-white">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-stars"></i> Analisis Cerdas Gemini ✨</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div id="ai-loader" class="text-center py-5 d-none">
-                        <div class="spinner-border text-primary mb-3"></div>
-                        <p class="text-muted">Menganalisis korelasi variabel X1 & X2...</p>
-                    </div>
-                    <div id="ai-result" class="lh-lg"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const apiKey = "";
-        const aiModal = new bootstrap.Modal(document.getElementById('aiModal'));
-        const aiResult = document.getElementById('ai-result');
-        const aiLoader = document.getElementById('ai-loader');
-
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
         }
 
-        // Comparison Chart: Tsukamoto vs Mamdani Trends
-        const ctx = document.getElementById('comparisonChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: @json($chart_labels),
-                datasets: [
-                    {
-                        label: 'Tsukamoto (Weighted Avg)',
-                        data: @json($chart_tsukamoto),
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'transparent',
-                        tension: 0.3,
-                        borderWidth: 3
+        const genderCtx = document.getElementById('genderChart')?.getContext('2d');
+        if (genderCtx) {
+            new Chart(genderCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: @json($gender_labels),
+                    datasets: [{
+                        data: @json($gender_values),
+                        backgroundColor: ['#60a5fa', '#f472b6'],
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    cutout: '55%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const v = context.raw || 0;
+                                    const data = context.dataset.data || [];
+                                    const sum = data.reduce((a, b) => a + (b || 0), 0);
+                                    const pct = sum ? (v / sum * 100).toFixed(1) : 0;
+                                    return context.label + ': ' + v + ' (' + pct + '%)';
+                                }
+                            }
+                        }
                     },
-                    {
-                        label: 'Mamdani (Centroid)',
-                        data: @json($chart_mamdani),
-                        borderColor: '#a855f7',
-                        backgroundColor: 'transparent',
-                        borderDash: [5, 5],
-                        tension: 0.3,
-                        borderWidth: 2
-                    }
-                ]
-            },
-            options: {
-                maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom' } },
-                scales: {
-                    y: { beginAtZero: true, max: 100 }
+                    elements: {
+                        arc: {
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }
+                    },
+                    maintainAspectRatio: false,
+                    responsive: true
                 }
-            }
-        });
-
-        async function callGemini(prompt, systemMsg = "") {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: systemMsg }] }
-            };
-            const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-            const data = await response.json();
-            return data.candidates[0].content.parts[0].text;
+            });
         }
 
-        async function analyzeThesisGap() {
-            aiResult.innerHTML = "";
-            aiLoader.classList.remove('d-none');
-            aiModal.show();
 
-            const prompt = `Analisis temuan statistik skripsi mahasiswa di Polindra:
-            - Variabel X1 (Tekanan Skripsi) mendominasi stres (rerata 72.4).
-            - Variabel X2 (Manajemen Waktu) cukup rendah (rerata 58.1).
-            - Akurasi Tsukamoto (81%) sedikit lebih tinggi dari Mamdani (80.5%).
+        const ageCtx = document.getElementById('ageChart')?.getContext('2d');
+        if (ageCtx) {
+            new Chart(ageCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: @json($age_labels),
+                    datasets: [{
+                        data: @json($age_values),
+                        backgroundColor: [
+                            '#93C5FD',
+                            '#A5B4FC',
+                            '#C4B5FD',
+                            '#F9A8D4',
+                            '#FBCFE8',
+                            '#FDE68A',
+                            '#86EFAC',
+                            '#99F6E4',
+                            '#A7F3D0'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    cutout: '55%',
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw || 0;
+                                    const data = context.dataset.data || [];
+                                    const total = data.reduce((a, b) => a + b, 0);
+                                    const percentage = total ?
+                                        ((value / total) * 100).toFixed(1) :
+                                        0;
 
-            Berdasarkan indikator pada proposal (Judul, Bimbingan, Revisi, Jadwal), berikan 3 kesimpulan penelitian sementara dan saran penanganan stres mahasiswa skripsi yang profesional.`;
-
-            try {
-                const res = await callGemini(prompt, "Anda adalah asisten dosen pembimbing skripsi Polindra dan ahli logika fuzzy.");
-                aiLoader.classList.add('d-none');
-                aiResult.innerHTML = `
-                    <h5 class="fw-bold mb-3">Analisis Penelitian Aditya Wisnu ✨</h5>
-                    ${res.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
-                `;
-            } catch (e) {
-                aiLoader.classList.add('d-none');
-                aiResult.innerHTML = "Gagal memproses analisis AI.";
-            }
+                                    return `${context.label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
+
+        const jenjangCtx = document.getElementById('jenjangChart')?.getContext('2d');
+        if (jenjangCtx) {
+            new Chart(jenjangCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: @json($jenjang_labels),
+                    datasets: [{
+                        data: @json($jenjang_values),
+                        backgroundColor: [
+                            '#8b5cf6', // D3
+                            '#34d399' // D4/S1
+                        ],
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    cutout: '55%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const v = context.raw || 0;
+                                    const data = context.dataset.data || [];
+                                    const sum = data.reduce((a, b) => a + (b || 0), 0);
+                                    const pct = sum ? (v / sum * 100).toFixed(1) : 0;
+
+                                    return context.label + ': ' + v + ' (' + pct + '%)';
+                                }
+                            }
+                        }
+                    },
+                    elements: {
+                        arc: {
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }
+                    },
+                    maintainAspectRatio: false,
+                    responsive: true
+                }
+            });
+        }
+
+        const statusCtx = document.getElementById('statusChart')?.getContext('2d');
+        if (statusCtx) {
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: @json($status_labels),
+                    datasets: [{
+                        data: @json($status_values),
+                        backgroundColor: ['#f59e0b', '#22c55e'],
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    cutout: '55%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const v = context.raw || 0;
+                                    const data = context.dataset.data || [];
+                                    const sum = data.reduce((a, b) => a + (b || 0), 0);
+                                    const pct = sum ? (v / sum * 100).toFixed(1) : 0;
+                                    return context.label + ': ' + v + ' (' + pct + '%)';
+                                }
+                            }
+                        }
+                    },
+                    elements: {
+                        arc: {
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }
+                    },
+                    maintainAspectRatio: false,
+                    responsive: true
+                }
+            });
+        }
+
+        const yearLabels = @json($year_labels);
+        const yearValues = @json($year_values);
+
+        const yearColors = [
+            '#60a5fa',
+            '#a78bfa',
+            '#34d399',
+            '#f59e0b',
+            '#f472b6',
+            '#14b8a6',
+            '#fb7185',
+            '#818cf8',
+            '#22c55e',
+            '#eab308'
+        ];
+
+        const yearCtx = document.getElementById('yearChart')?.getContext('2d');
+        if (yearCtx) {
+            new Chart(yearCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: yearLabels,
+                    datasets: [{
+                        data: yearValues,
+                        backgroundColor: yearLabels.map((_, i) => yearColors[i % yearColors.length]),
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    cutout: '55%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const v = context.raw || 0;
+                                    const data = context.dataset.data || [];
+                                    const sum = data.reduce((a, b) => a + (b || 0), 0);
+                                    const pct = sum ? (v / sum * 100).toFixed(1) : 0;
+                                    return context.label + ': ' + v + ' (' + pct + '%)';
+                                }
+                            }
+                        }
+                    },
+                    elements: {
+                        arc: {
+                            borderColor: '#fff',
+                            borderWidth: 2
+                        }
+                    },
+                    maintainAspectRatio: false,
+                    responsive: true
+                }
+            });
+        }
+
+
+
     </script>
 @endsection
