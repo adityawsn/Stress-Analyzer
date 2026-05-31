@@ -137,11 +137,12 @@
                     <form method="GET" action="{{ url()->current() }}" style="width: 350px;">
                         <input type="search" name="q" value="{{ request('q') }}" class="form-control form-control-sm" placeholder="Cari responden...">
                     </form>
-                    <button class="btn btn-sm btn-light border rounded-pill"">
+                    <button class="btn btn-sm btn-light border rounded-pill" onclick="importData()">
                         <i class="bi bi-file-earmark-arrow-up"></i> Impor
                     </button>
-                    <button class="btn btn-sm btn-light border rounded-pill">
+                    <a href="{{ route('hasil.export', request()->only('q')) }}" class="btn btn-sm btn-light border rounded-pill">
                         <i class="bi bi-file-earmark-arrow-down"></i> Ekspor
+                    </a>
                 </div>
             </div>
 

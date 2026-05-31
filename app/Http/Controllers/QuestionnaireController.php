@@ -18,7 +18,7 @@ class QuestionnaireController extends Controller
             'kampus' => 'required|string|max:255',
             'jurusan' => 'required|string|max:255',
             'prodi' => 'required|string|max:255',
-            'status' => 'required|in:proses,selesai',
+            'status' => 'required|in:Proses,Selesai',
             'tahun' => 'required|integer|min:2000|max:2030',
             'answers' => 'required|array|size:10',
             'answers.*' => 'required|integer|between:1,5',
@@ -35,7 +35,8 @@ class QuestionnaireController extends Controller
             'kampus' => $validated['kampus'],
             'jurusan' => $validated['jurusan'],
             'prodi' => $validated['prodi'],
-            'status' => $validated['status'],
+            // store normalized lowercase status to match DB enum values
+            'status' => strtolower($validated['status']),
             'tahun' => $validated['tahun'],
             'answers' => $validated['answers'],
             'tps' => $validated['tps'],

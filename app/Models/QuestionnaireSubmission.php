@@ -32,4 +32,11 @@ class QuestionnaireSubmission extends Model
         'umur' => 'integer',
         'tahun' => 'integer',
     ];
+
+    // Accessor for a human-friendly status label (capitalize first letter)
+    public function getStatusLabelAttribute()
+    {
+        $status = $this->attributes['status'] ?? '';
+        return $status === '' ? '' : ucfirst($status);
+    }
 }

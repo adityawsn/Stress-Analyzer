@@ -19,7 +19,7 @@ class QuestionnaireSubmissionSeeder extends Seeder
                 'kampus' => 'Politeknik Negeri Indramayu',
                 'jurusan' => 'Teknik Informatika',
                 'prodi' => 'Rekayasa Perangkat Lunak',
-                'status' => 'proses',
+                'status' => 'Proses',
                 'tahun' => 2026,
                 'answers' => [
                     'q1' => 5,
@@ -45,7 +45,7 @@ class QuestionnaireSubmissionSeeder extends Seeder
                 'kampus' => 'UIN Raden Fatah Palembang',
                 'jurusan' => 'Ekonomi dan Bisnis',
                 'prodi' => 'Perbankan Syariah',
-                'status' => 'selesai',
+                'status' => 'Selesai',
                 'tahun' => 2025,
                 'answers' => [
                     'q1' => 4,
@@ -71,7 +71,7 @@ class QuestionnaireSubmissionSeeder extends Seeder
                 'kampus' => 'Politeknik Negeri Indramayu',
                 'jurusan' => 'Teknik Infomatika',
                 'prodi' => 'Rekayasa Perangkat Lunak',
-                'status' => 'proses',
+                'status' => 'Proses',
                 'tahun' => 2026,
                 'answers' => [
                     'q1' => 5,

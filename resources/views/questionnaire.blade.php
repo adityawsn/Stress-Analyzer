@@ -325,8 +325,8 @@
                     <div class="mb-3 position-relative">
                         <select id="status" class="form-select" required>
                             <option value="">Pilih Status</option>
-                            <option value="proses">Sedang Menyusun Skripsi</option>
-                            <option value="selesai">Sudah Menyelesaikan Skripsi</option>
+                            <option value="Proses">Sedang Menyusun Skripsi</option>
+                            <option value="Selesai">Sudah Menyelesaikan Skripsi</option>
                         </select>
                         <small class="text-danger error-text d-none">Pilih status skripsi</small>
                     </div>

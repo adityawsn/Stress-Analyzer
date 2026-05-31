@@ -117,6 +117,7 @@ route::get('/pengaturan-fuzzy', function () {
 });
 route::get('/hasil-kuesioner', [ResultController::class, 'index']);
 route::get('/hasil-kuesioner/{id}/detail', [ResultController::class, 'detail']);
+route::get('/hasil-kuesioner/export', [ResultController::class, 'export'])->name('hasil.export');
 Route::get('/analisis-statistik', [DashboardController::class, 'statistics']);
 
 route::get('/login', function () {
