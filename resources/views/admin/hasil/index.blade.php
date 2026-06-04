@@ -137,9 +137,9 @@
                     <form method="GET" action="{{ url()->current() }}" style="width: 350px;">
                         <input type="search" name="q" value="{{ request('q') }}" class="form-control form-control-sm" placeholder="Cari responden...">
                     </form>
-                    <button class="btn btn-sm btn-light border rounded-pill" onclick="importData()">
+                    <a href="{{ route('hasil.import') }}" class="btn btn-sm btn-light border rounded-pill">
                         <i class="bi bi-file-earmark-arrow-up"></i> Impor
-                    </button>
+                    </a>
                     <a href="{{ route('hasil.export', request()->only('q')) }}" class="btn btn-sm btn-light border rounded-pill">
                         <i class="bi bi-file-earmark-arrow-down"></i> Ekspor
                     </a>
@@ -318,14 +318,6 @@
                 aiResult.innerHTML = '<div class="alert alert-danger">Gagal memuat data detail.</div>';
                 console.error(err);
             }
-        }
-
-        function importData() {
-            alert('Fitur Impor akan segera hadir');
-        }
-
-        function exportData() {
-            alert('Fitur Ekspor akan segera hadir');
         }
     </script>
 @endsection

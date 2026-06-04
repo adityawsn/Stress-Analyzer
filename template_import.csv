@@ -1,0 +1,6 @@
+nama,email,gender,umur,jenjang,kampus,jurusan,prodi,status,tahun,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10
+Aditya Wisnu,aditya@test.com,Laki-laki,21,D4 / S1,Politeknik Negeri Indramayu,Teknik Informatika,Rekayasa Perangkat Lunak,Proses,2026,5,3,4,2,2,5,5,4,2,5
+Siti Nurhaliza,siti@test.com,Perempuan,20,D4 / S1,Politeknik Negeri Indramayu,Teknik Informatika,Sistem Informasi,Selesai,2025,4,4,3,3,2,4,3,4,5,4
+Bambang Suryanto,bambang@test.com,Laki-laki,22,D4 / S1,Politeknik Negeri Indramayu,Teknik Elektronika,Rekayasa Sistem,Proses,2026,3,2,2,4,3,2,3,2,3,4
+Dewi Lestari,dewi@test.com,Perempuan,19,D4 / S1,Politeknik Negeri Indramayu,Teknik Mesin,Produksi,Selesai,2025,5,5,5,1,1,5,4,5,1,2
+Rafi Hidayat,rafi@test.com,Laki-laki,23,D4 / S1,Politeknik Negeri Indramayu,Teknik Listrik,Mekatronika,Proses,2026,2,3,4,5,4,1,2,3,5,4

@@ -359,4 +359,152 @@ class ResultController extends Controller
 
         return $deskripsi;
     }
+
+    public function import()
+    {
+        return view('admin.hasil.import');
+    }
+
+    public function storeImport(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt,xlsx,xls|max:5120',
+        ]);
+
+        $file = $request->file('file');
+        $path = $file->getRealPath();
+        $fileName = $file->getClientOriginalName();
+
+        try {
+            $rows = [];
+            $imported = 0;
+            $errors = [];
+
+            // Determine file type and parse accordingly
+            if (in_array($file->getClientOriginalExtension(), ['xlsx', 'xls'])) {
+                // Parse Excel
+                if (class_exists(\PhpOffice\PhpSpreadsheet\IOFactory::class)) {
+                    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+                    $worksheet = $spreadsheet->getActiveSheet();
+                    $rows = $worksheet->toArray();
+                } else {
+                    return back()->with('error', 'Library Excel tidak ditemukan. Gunakan file CSV saja.');
+                }
+            } else {
+                // Parse CSV
+                $file_handle = fopen($path, 'r');
+                while (($row = fgetcsv($file_handle)) !== false) {
+                    $rows[] = $row;
+                }
+                fclose($file_handle);
+            }
+
+            if (empty($rows) || count($rows) < 2) {
+                return back()->with('error', 'File kosong atau format tidak sesuai.');
+            }
+
+            // Parse header
+            $header = array_map('trim', $rows[0]);
+            $headerMap = array_flip($header);
+
+            // Required columns
+            $required = ['nama', 'email', 'gender', 'umur', 'jenjang', 'kampus', 'jurusan', 'prodi', 'status', 'tahun', 
+                         'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
+            
+            $missing = array_diff($required, $header);
+            if (!empty($missing)) {
+                return back()->with('error', 'Kolom yang diperlukan tidak ditemukan: ' . implode(', ', $missing));
+            }
+
+            // Process each row
+            for ($i = 1; $i < count($rows); $i++) {
+                $row = $rows[$i];
+                
+                // Skip empty rows
+                if (empty(array_filter($row))) {
+                    continue;
+                }
+
+                try {
+                    $data = [];
+                    foreach ($required as $col) {
+                        if (isset($headerMap[$col]) && isset($row[$headerMap[$col]])) {
+                            $data[$col] = trim($row[$headerMap[$col]]);
+                        }
+                    }
+
+                    // Validate required fields
+                    if (empty($data['nama']) || empty($data['email']) || empty($data['gender'])) {
+                        $errors[] = "Baris " . ($i + 1) . ": Data diri tidak lengkap";
+                        continue;
+                    }
+
+                    // Validate answers (q1-q10)
+                    $answers = [];
+                    $validAnswers = true;
+                    for ($q = 1; $q <= 10; $q++) {
+                        $val = (int)($data["q{$q}"] ?? 0);
+                        if ($val < 1 || $val > 5) {
+                            $validAnswers = false;
+                            break;
+                        }
+                        $answers["q{$q}"] = $val;
+                    }
+
+                    if (!$validAnswers) {
+                        $errors[] = "Baris " . ($i + 1) . ": Jawaban harus 1-5";
+                        continue;
+                    }
+
+                    // Calculate TPS (q1-q5 average * 20)
+                    $tpsSum = $answers['q1'] + $answers['q2'] + $answers['q3'] + $answers['q4'] + $answers['q5'];
+                    $tps = ($tpsSum / 5) * 20;
+
+                    // Calculate MW (q6-q10 average * 20)
+                    $mwSum = $answers['q6'] + $answers['q7'] + $answers['q8'] + $answers['q9'] + $answers['q10'];
+                    $mw = ($mwSum / 5) * 20;
+
+                    // Check if email already exists
+                    if (QuestionnaireSubmission::where('email', $data['email'])->exists()) {
+                        $errors[] = "Baris " . ($i + 1) . ": Email {$data['email']} sudah ada";
+                        continue;
+                    }
+
+                    // Create submission
+                    QuestionnaireSubmission::create([
+                        'nama' => $data['nama'],
+                        'email' => $data['email'],
+                        'gender' => $data['gender'],
+                        'umur' => (int)$data['umur'],
+                        'jenjang' => $data['jenjang'],
+                        'kampus' => $data['kampus'],
+                        'jurusan' => $data['jurusan'],
+                        'prodi' => $data['prodi'],
+                        'status' => $data['status'],
+                        'tahun' => (int)$data['tahun'],
+                        'answers' => $answers,
+                        'tps' => round($tps, 2),
+                        'mw' => round($mw, 2),
+                    ]);
+
+                    $imported++;
+                } catch (\Exception $e) {
+                    $errors[] = "Baris " . ($i + 1) . ": " . $e->getMessage();
+                }
+            }
+
+            $msg = "$imported data berhasil diimpor";
+            if (!empty($errors)) {
+                $msg .= ". " . count($errors) . " baris gagal: " . implode("; ", array_slice($errors, 0, 5));
+                if (count($errors) > 5) {
+                    $msg .= "... dan " . (count($errors) - 5) . " error lainnya";
+                }
+                return back()->with('warning', $msg);
+            }
+
+            return back()->with('success', $msg);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal memproses file: ' . $e->getMessage());
+        }
+    }
 }
