@@ -276,8 +276,8 @@
                     <div class="mb-3 position-relative">
                         <select id="gender" class="form-select" required>
                             <option value="">Pilih Jenis Kelamin</option>
-                            <option value="L">Laki-laki</option>
-                            <option value="P">Perempuan</option>
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
                         </select>
                         <small class="text-danger error-text d-none">Pilih jenis kelamin</small>
                     </div>
@@ -296,8 +296,8 @@
                     <div class="mb-3 position-relative">
                         <select id="jenjang" class="form-select" required>
                             <option value="">Pilih Jenjang</option>
-                            <option>D3</option>
-                            <option>D4 / S1</option>
+                            <option value="D3">D3</option>
+                            <option value="D4 / S1">D4 / S1</option>
                         </select>
                         <small class="text-danger error-text d-none">Pilih jenjang</small>
                     </div>

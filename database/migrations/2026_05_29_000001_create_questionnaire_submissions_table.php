@@ -12,13 +12,13 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('email');
-            $table->enum('gender', ['L', 'P']);
+            $table->enum('gender', ['Laki-laki', 'Perempuan']);
             $table->unsignedTinyInteger('umur');
             $table->string('jenjang');
             $table->string('kampus');
             $table->string('jurusan');
             $table->string('prodi');
-            $table->enum('status', ['proses', 'selesai']);
+            $table->enum('status', ['Proses', 'Selesai']);
             $table->unsignedSmallInteger('tahun');
             $table->json('answers');
             $table->decimal('tps', 5, 2);

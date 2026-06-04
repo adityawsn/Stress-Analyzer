@@ -90,8 +90,8 @@ class ResultController extends Controller
             $row = [
                 'id' => $rowNumber,
                 // 'submission_id' => $s->id,
-                'nama' => $s->nama,
                 'email' => $s->email ?? '',
+                'nama' => $s->nama,
                 'gender' => $s->gender ?? '',
                 'umur' => $s->umur ?? '',
                 'jenjang' => $s->jenjang ?? '',
@@ -121,15 +121,15 @@ class ResultController extends Controller
             } else {
                 $row['selisih'] = $selisih;
             }
-            $row['created_at'] = $s->created_at->toDateTimeString();
-            // $row['updated_at'] = $s->updated_at->toDateTimeString();
+            $row['created_at'] = $s->created_at ? $s->created_at->format('d-m-Y H:i:s') : '';
+            // $row['updated_at'] = $s->updated_at ? $s->updated_at->format('d-m-Y H:i:s') : '';
 
             $rows[] = $row;
         }
 
         // build columns list matching DB + q1..q10 + computed fields
         $columns = [
-            'id', 'nama','email','gender','umur','jenjang','kampus','jurusan','prodi','status','tahun',
+            'id', 'email','nama','gender','umur','jenjang','kampus','jurusan','prodi','status','tahun',
         ];
         for ($i = 1; $i <= 10; $i++) {
             $columns[] = 'q' . $i;

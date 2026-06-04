@@ -13,7 +13,7 @@ class QuestionnaireSubmissionSeeder extends Seeder
             [
                 'nama' => 'Aditya Wisnu Setya Pamungkas',
                 'email' => 'aditya@example.com',
-                'gender' => 'L',
+                'gender' => 'Laki-laki',
                 'umur' => 21,
                 'jenjang' => 'D4 / S1',
                 'kampus' => 'Politeknik Negeri Indramayu',
@@ -39,7 +39,7 @@ class QuestionnaireSubmissionSeeder extends Seeder
             [
                 'nama' => 'Anisa Nur Pratiwi',
                 'email' => 'anisa@example.com',
-                'gender' => 'P',
+                'gender' => 'Perempuan',
                 'umur' => 20,
                 'jenjang' => 'D4 / S1',
                 'kampus' => 'UIN Raden Fatah Palembang',
@@ -65,7 +65,7 @@ class QuestionnaireSubmissionSeeder extends Seeder
             [
                 'nama' => 'Nicho Ray',
                 'email' => 'nicho@example.com',
-                'gender' => 'L',
+                'gender' => 'Laki-laki',
                 'umur' => 22,
                 'jenjang' => 'D4 / S1',
                 'kampus' => 'Politeknik Negeri Indramayu',

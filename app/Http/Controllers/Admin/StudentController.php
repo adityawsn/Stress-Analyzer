@@ -32,9 +32,7 @@ class StudentController extends Controller
 
         // attach a friendly status label for display
         $students->getCollection()->transform(function (QuestionnaireSubmission $student) {
-            $student->status_label = $student->status === 'selesai'
-                ? 'Selesai'
-                : 'Proses';
+            $student->status_label = $student->status ? ucfirst(strtolower($student->status)) : '';
 
             return $student;
         });

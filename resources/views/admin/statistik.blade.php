@@ -89,7 +89,7 @@
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Tekanan
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Tekanan Penyusunan Skripsi
                                 (X1)</small>
                             <i class="bi bi-exclamation-circle text-danger"></i>
                         </div>
@@ -100,7 +100,7 @@
                 <div class="col-md-3">
                     <div class="card data-card border-0 shadow-sm">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Manajemen
+                            <small class="text-muted fw-bold text-uppercase" style="font-size: 10px;">Rerata Manajemen Waktu
                                 (X2)</small>
                             <i class="bi bi-clock text-primary"></i>
                         </div>

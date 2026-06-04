@@ -12,7 +12,7 @@ class QuestionnaireController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'gender' => 'required|in:L,P',
+            'gender' => 'required|in:Laki-laki,Perempuan',
             'umur' => 'required|integer|min:10|max:120',
             'jenjang' => 'required|string|max:20',
             'kampus' => 'required|string|max:255',
@@ -35,8 +35,7 @@ class QuestionnaireController extends Controller
             'kampus' => $validated['kampus'],
             'jurusan' => $validated['jurusan'],
             'prodi' => $validated['prodi'],
-            // store normalized lowercase status to match DB enum values
-            'status' => strtolower($validated['status']),
+            'status' => $validated['status'],
             'tahun' => $validated['tahun'],
             'answers' => $validated['answers'],
             'tps' => $validated['tps'],

@@ -178,7 +178,7 @@
                                         <td class="text-end pe-4">
                                             <div class="btn-group shadow-sm rounded-pill overflow-hidden border">
                                                 <button class="btn btn-white btn-sm px-3"
-                                                    onclick="showFullDetail('{{ addslashes($student->nama) }}', '{{ $student->gender === 'L' ? 'Laki-laki' : 'Perempuan' }}', '{{ $student->email }}', {{ $student->umur }}, '{{ $student->jenjang }}', '{{ addslashes($student->kampus) }}', '{{ addslashes($student->jurusan) }}', '{{ addslashes($student->prodi) }}', '{{ $student->status_label }}', {{ $student->tahun }})">Detail</button>
+                                                    onclick="showFullDetail('{{ addslashes($student->nama) }}', '{{ $student->gender }}', '{{ $student->email }}', {{ $student->umur }}, '{{ $student->jenjang }}', '{{ addslashes($student->kampus) }}', '{{ addslashes($student->jurusan) }}', '{{ addslashes($student->prodi) }}', '{{ $student->status_label }}', {{ $student->tahun }})">Detail</button>
                                             </div>
                                         </td>
                                     </tr>

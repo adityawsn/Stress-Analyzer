@@ -110,8 +110,8 @@ class DashboardController extends Controller
         $genderCounts = $subs->groupBy('gender')->map->count()->toArray();
 
         $orderedGender = [
-            'Laki-laki' => $genderCounts['L'] ?? 0,
-            'Perempuan' => $genderCounts['P'] ?? 0,
+            'Laki-laki' => $genderCounts['Laki-laki'] ?? 0,
+            'Perempuan' => $genderCounts['Perempuan'] ?? 0,
         ];
 
         $gender_labels = array_keys($orderedGender);
@@ -137,16 +137,16 @@ class DashboardController extends Controller
         $jenjang_labels = array_keys($orderedJenjang);
         $jenjang_values = array_values($orderedJenjang);
 
-        // Status counts (proses / selesai)
-$statusCounts = $subs->groupBy('status')->map->count()->toArray();
+        // Status counts (Proses / Selesai)
+        $statusCounts = $subs->groupBy('status')->map->count()->toArray();
 
-$orderedStatus = [
-    'Dalam Proses' => $statusCounts['proses'] ?? 0,
-    'Selesai' => $statusCounts['selesai'] ?? 0,
-];
+        $orderedStatus = [
+            'Dalam Proses' => ($statusCounts['Proses'] ?? 0) + ($statusCounts['proses'] ?? 0),
+            'Selesai' => ($statusCounts['Selesai'] ?? 0) + ($statusCounts['selesai'] ?? 0),
+        ];
 
-$status_labels = array_keys($orderedStatus);
-$status_values = array_values($orderedStatus);
+        $status_labels = array_keys($orderedStatus);
+        $status_values = array_values($orderedStatus);
 
         // Year counts
         $yearCounts = $subs->groupBy('tahun')->map->count()->sortKeys()->toArray();
@@ -157,8 +157,8 @@ $status_values = array_values($orderedStatus);
         $status_by_year_proses = [];
         $status_by_year_selesai = [];
         foreach ($year_labels as $y) {
-            $status_by_year_proses[] = isset($yearCounts[$y]) ? $subs->where('tahun', $y)->where('status', 'proses')->count() : 0;
-            $status_by_year_selesai[] = isset($yearCounts[$y]) ? $subs->where('tahun', $y)->where('status', 'selesai')->count() : 0;
+            $status_by_year_proses[] = isset($yearCounts[$y]) ? $subs->where('tahun', $y)->whereIn('status', ['Proses', 'proses'])->count() : 0;
+            $status_by_year_selesai[] = isset($yearCounts[$y]) ? $subs->where('tahun', $y)->whereIn('status', ['Selesai', 'selesai'])->count() : 0;
         }
 
         // Top stressor counts from answers (q1..q10)
