@@ -408,9 +408,9 @@ class ResultController extends Controller
             $headerMap = array_flip($header);
 
             // Required columns
-            $required = ['nama', 'email', 'gender', 'umur', 'jenjang', 'kampus', 'jurusan', 'prodi', 'status', 'tahun', 
+            $required = ['nama', 'email', 'gender', 'umur', 'jenjang', 'kampus', 'jurusan', 'prodi', 'status', 'tahun',
                          'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
-            
+
             $missing = array_diff($required, $header);
             if (!empty($missing)) {
                 return back()->with('error', 'Kolom yang diperlukan tidak ditemukan: ' . implode(', ', $missing));
@@ -419,7 +419,7 @@ class ResultController extends Controller
             // Process each row
             for ($i = 1; $i < count($rows); $i++) {
                 $row = $rows[$i];
-                
+
                 // Skip empty rows
                 if (empty(array_filter($row))) {
                     continue;

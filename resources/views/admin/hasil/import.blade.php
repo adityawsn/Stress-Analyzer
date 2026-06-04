@@ -199,8 +199,7 @@ nama,email,gender,umur,jenjang,kampus,jurusan,prodi,status,tahun,q1,q2,q3,q4,q5,
                         <div class="mb-3">
                             <label class="form-label small fw-bold text-muted">Contoh Data</label>
                             <div class="bg-light p-2 rounded overflow-auto" style="font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.5;">
-Aditya,aditya@gmail.com,Laki-laki,21,D4 / S1,Politeknik Negeri Indramayu,Teknik Informatika,RPL,Proses,2026,5,3,4,2,2,5,5,4,2,5<br>
-Siti,siti@gmail.com,Perempuan,20,D4 / S1,Politeknik Negeri Indramayu,Teknik Informatika,SI,Selesai,2025,4,4,3,3,2,4,3,4,5,4
+Aditya,aditya@gmail.com,Laki-laki,21,D4 / S1,Politeknik Negeri Indramayu,Teknik Informatika,RPL,Proses,2026,5,3,4,2,2,5,5,4,2,5
                             </div>
                         </div>
 
@@ -298,8 +297,7 @@ Siti,siti@gmail.com,Perempuan,20,D4 / S1,Politeknik Negeri Indramayu,Teknik Info
     function downloadTemplate() {
         const header = 'nama,email,gender,umur,jenjang,kampus,jurusan,prodi,status,tahun,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10';
         const sample1 = 'Aditya,aditya@gmail.com,Laki-laki,21,D4 / S1,Politeknik Negeri Indramayu,Teknik Informatika,RPL,Proses,2026,5,3,4,2,2,5,5,4,2,5';
-        const sample2 = 'Siti,siti@gmail.com,Perempuan,20,D4 / S1,Politeknik Negeri Indramayu,Teknik Informatika,SI,Selesai,2025,4,4,3,3,2,4,3,4,5,4';
-        
+
         const csv = header + '\n' + sample1 + '\n' + sample2;
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
