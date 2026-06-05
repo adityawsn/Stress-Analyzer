@@ -333,7 +333,7 @@ class ResultController extends Controller
 
     private function getCategory(float $value): string
     {
-        if ($value < 30) {
+        if ($value <= 30) {
             return 'Rendah';
         }
 

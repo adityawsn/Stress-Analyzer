@@ -124,7 +124,7 @@
             </div>
         </header>
 
-        <div class="container-fluid py-4">
+        <div class="container-fluid py-2">
             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div>
                     <h4 class="fw-bold mb-0">Tabulasi Data Kuesioner</h4>
@@ -170,11 +170,11 @@
                             @else
                                 @foreach($results as $result)
                                     @php
-                                        $tpsCat = $result->tps >= 50 && $result->tps < 70 ? 'Sedang' : ($result->tps >= 70 ? 'Tinggi' : 'Rendah');
-                                        $tpsCatColor = $result->tps >= 70 ? 'text-danger' : ($result->tps >= 50 ? 'text-warning' : 'text-success');
+                                        $tpsCat = $result->tps >= 30 && $result->tps < 70 ? 'Sedang' : ($result->tps >= 70 ? 'Tinggi' : 'Rendah');
+                                        $tpsCatColor = $result->tps >= 70 ? 'text-danger' : ($result->tps >= 30 ? 'text-warning' : 'text-success');
 
-                                        $mwCat = $result->mw >= 50 && $result->mw < 70 ? 'Cukup' : ($result->mw >= 70 ? 'Baik' : 'Buruk');
-                                        $mwCatColor = $result->mw >= 70 ? 'text-success' : ($result->mw >= 50 ? 'text-primary' : 'text-danger');
+                                        $mwCat = $result->mw >= 30 && $result->mw < 70 ? 'Cukup' : ($result->mw >= 70 ? 'Baik' : 'Buruk');
+                                        $mwCatColor = $result->mw >= 70 ? 'text-success' : ($result->mw >= 30 ? 'text-primary' : 'text-danger');
 
                                         $tsukColor = $result->tsukamoto['kategori'] === 'Tinggi' ? 'text-danger' : ($result->tsukamoto['kategori'] === 'Sedang' ? 'text-warning' : 'text-success');
                                         $mandColor = $result->mamdani['kategori'] === 'Tinggi' ? 'text-danger' : ($result->mamdani['kategori'] === 'Sedang' ? 'text-warning' : 'text-success');

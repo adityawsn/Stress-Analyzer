@@ -22,7 +22,7 @@
             </div>
         </header>
 
-        <div class="container-fluid py-4">
+        <div class="container-fluid py-2">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h4 class="fw-bold mb-0">Status Dashboard Penelitian</h4>
@@ -150,14 +150,33 @@
         const donutTs = @json($donut_ts ?? [0, 0, 0]);
         const donutMm = @json($donut_mm ?? [0, 0, 0]);
 
-        // Comparison Chart
+        // Comparison Chart — sample up to 7 random respondents
+        function sampleArrays(labelsArr, tsArr, mmArr, maxItems = 7) {
+            const n = (labelsArr || []).length;
+            if (n <= maxItems) {
+                return { labels: labelsArr, ts: tsArr, mm: mmArr };
+            }
+            const indices = Array.from({ length: n }, (_, i) => i);
+            for (let i = indices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [indices[i], indices[j]] = [indices[j], indices[i]];
+            }
+            const chosen = indices.slice(0, maxItems);
+            const sampledLabels = chosen.map(i => labelsArr[i]);
+            const sampledTs = chosen.map(i => tsArr[i]);
+            const sampledMm = chosen.map(i => mmArr[i]);
+            return { labels: sampledLabels, ts: sampledTs, mm: sampledMm };
+        }
+
+        const sampled = sampleArrays(labels, tsukamotoData, mamdaniData, 7);
+
         new Chart(document.getElementById('comparisonChart'), {
             type: 'line',
             data: {
-                labels: labels,
+                labels: sampled.labels,
                 datasets: [{
                         label: 'Tsukamoto',
-                        data: tsukamotoData,
+                        data: sampled.ts,
                         borderColor: '#3b82f6',
                         backgroundColor: 'transparent',
                         tension: 0.3,
@@ -165,7 +184,7 @@
                     },
                     {
                         label: 'Mamdani',
-                        data: mamdaniData,
+                        data: sampled.mm,
                         borderColor: '#f59e0b',
                         backgroundColor: 'transparent',
                         borderDash: [5, 5],

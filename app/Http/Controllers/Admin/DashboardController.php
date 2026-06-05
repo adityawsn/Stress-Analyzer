@@ -35,7 +35,7 @@ class DashboardController extends Controller
         $donut_mm = ['Rendah' => 0, 'Sedang' => 0, 'Tinggi' => 0];
 
         foreach ($subs as $index => $s) {
-            $labels[] = 'Mahasiswa ' . ($index + 1);
+            $labels[] = 'Mhs ' . ($index + 1);
 
             $result = $this->getFuzzyResult($s);
             $tsVal = floatval($result['tsukamoto']['nilai'] ?? 0);
@@ -289,7 +289,7 @@ class DashboardController extends Controller
 
     private function getCategory(float $value): string
     {
-        if ($value < 30) {
+        if ($value <= 30) {
             return 'Rendah';
         }
 

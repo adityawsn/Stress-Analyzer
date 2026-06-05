@@ -130,7 +130,7 @@
             </div>
         </header>
 
-        <div class="container-fluid py-4">
+        <div class="container-fluid py-2">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h4 class="fw-bold mb-0">Parameter Penelitian (X1 & X2)</h4>
