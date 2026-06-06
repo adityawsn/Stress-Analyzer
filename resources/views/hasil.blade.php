@@ -856,24 +856,20 @@
         }
 
         .chart-wrapper-elegant {
-            position: relative;
+            /* position: relative;
             width: 100%;
-            height: auto;
+            height: auto; */
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .chart-image-elegant {
-            display: block;
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            border-radius: 15px;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, filter 0.3s ease;
-        }
+.chart-image-elegant {
+    max-height: 350px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
 
         .chart-image-elegant:hover {
             transform: scale(1.02);
@@ -956,6 +952,106 @@
             }
         }
 
+        .simple-result-card {
+    background: linear-gradient(135deg, #eaf7fb 0%, #ffffff 100%);
+    border-radius: 22px;
+    padding: 32px;
+    border: 1px solid #dceef5;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+}
+
+.score-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: #0d6efd;
+    color: white;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: 800;
+    box-shadow: 0 10px 25px rgba(13, 110, 253, 0.25);
+}
+
+.info-box {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.calculation-step {
+    background: #f8f9fa;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid #0d6efd;
+}
+
+.calculation-step strong {
+    display: block;
+    color: #212529;
+    margin-bottom: 4px;
+}
+
+.calculation-step span {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.recommendation-card {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 18px;
+    height: 100%;
+    border: 1px solid #e9ecef;
+}
+
+.recommendation-card h6 {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.recommendation-card p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0;
+    line-height: 1.6;
+}
+
+.info-box hr {
+    border-top: 1px solid #e5e7eb;
+    opacity: 1;
+}
+
+.info-box ul li {
+    margin-bottom: 6px;
+}
+
+.comparison-values-grid{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    height:100%;
+}
+
+.value-box{
+    flex:1;
+    min-height:130px;
+}
+
+.comparison-chart-section{
+    height:100%;
+}
+
+.comparison-image-elegant{
+    width:100%;
+    max-height:380px;
+    object-fit:contain;
+}
     </style>
 
     <div class="container container-custom py-3 mb-3">
@@ -991,123 +1087,310 @@
             </div>
 
             <!-- Tsukamoto Result -->
-            <div id="tsukamoto" class="method-content active">
-                <div class="result-row">
-                    <div class="result-card-elegant">
-                        <div class="method-header-elegant">
-                            <h4 class="method-title-elegant">
-                                <i class="fas fa-calculator method-icon-tsukamoto"></i>
-                                Metode Tsukamoto
-                            </h4>
-                        </div>
-                        <div class="score-display-elegant" id="skor-tsukamoto">-</div>
-                        <div class="category-badge-elegant" id="category-badge-tsukamoto">
-                            <span id="kategori-tsukamoto">-</span>
-                        </div>
-                        <div class="interpretation-elegant" style="margin-top: 20px; text-align: left;">
-                            <h5 style="font-size: 0.95rem; margin-bottom: 12px; color: #444; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-lightbulb" style="color: #f39c12; font-size: 0.9rem;"></i>
-                                Interpretasi Hasil
-                            </h5>
-                            <p id="interpretation-text-tsukamoto" style="margin: 0; font-size: 0.9rem; color: #555; line-height: 1.6;">
-                                <!-- Text akan diisi berdasarkan kategori -->
-                            </p>
-                        </div>
+<div id="tsukamoto" class="method-content active">
+
+    <!-- HASIL + GRAFIK -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-5">
+            <div class="simple-result-card h-100">
+
+                <p class="text-muted mb-1">Hasil Metode Tsukamoto</p>
+                <h3 class="fw-bold mb-4">Tingkat Stres Anda</h3>
+
+                <div class="text-center">
+                    <div class="score-circle">
+                        <span id="skor-tsukamoto">-</span>
                     </div>
 
-                    <div class="chart-container-elegant">
-                        <div class="chart-wrapper-elegant">
-                            <img id="tsukamoto-img" class="chart-image-elegant" src="" alt="Grafik Tsukamoto Python" />
-                        </div>
+                    <div class="mt-3">
+                        <span class="badge fs-6 px-4 py-2" id="category-badge-tsukamoto">
+                            <span id="kategori-tsukamoto">-</span>
+                        </span>
                     </div>
                 </div>
+
             </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="info-box h-100">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-graph-up text-primary me-2"></i>
+                    Visualisasi Hasil
+                </h5>
+
+                <div class="chart-wrapper-elegant">
+                    <img id="tsukamoto-img"
+                        class="chart-image-elegant"
+                        src=""
+                        alt="Grafik Tsukamoto Python" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- INTERPRETASI + PERHITUNGAN -->
+    <div class="row g-4">
+
+        <div class="col-lg-6">
+            <div class="info-box h-100">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-info-circle text-primary me-2"></i>
+                    Apa Maksud Hasil Ini?
+                </h5>
+
+                <p id="interpretation-text-tsukamoto"
+                    class="text-muted mb-0"
+                    style="line-height: 1.8;">
+                    Memuat interpretasi hasil...
+                </p>
+                <hr class="my-3">
+
+        <h6 class="fw-bold mb-3">
+            <i class="bi bi-lightbulb text-warning me-2"></i>
+            Saran Selanjutnya
+        </h6>
+
+        <ul class="text-muted mb-0 ps-3" style="line-height: 1.4;">
+            <li>Buat target skripsi mingguan yang realistis.</li>
+            <li>Fokus mengerjakan satu tugas terlebih dahulu.</li>
+            <li>Luangkan waktu istirahat secara teratur.</li>
+            <li>Diskusikan kendala dengan dosen pembimbing.</li>
+        </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="info-box h-100">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-calculator text-primary me-2"></i>
+                    Ringkasan Perhitungan
+                </h5>
+
+                <div class="calculation-step">
+                    <strong>1. Fuzzifikasi</strong>
+                    <span>TPS dan MW diubah menjadi nilai fuzzy.</span>
+                </div>
+
+                <div class="calculation-step">
+                    <strong>2. Inferensi</strong>
+                    <span>Aturan fuzzy diproses sesuai kondisi Anda.</span>
+                </div>
+
+                <div class="calculation-step">
+                    <strong>3. Defuzzifikasi</strong>
+                    <span>Hasil akhir dihitung menjadi satu nilai stres.</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- REKOMENDASI -->
+    <div class="info-box mt-4">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-heart-pulse text-danger me-2"></i>
+            Rekomendasi
+        </h5>
+
+        <div id="recommendation-tsukamoto" class="row g-3">
+        </div>
+
+    </div>
+
+</div>
 
             <!-- Mamdani Result -->
             <div id="mamdani" class="method-content">
-                <div class="result-row">
-                    <div class="result-card-elegant">
-                        <div class="method-header-elegant">
-                            <h4 class="method-title-elegant">
-                                <i class="fas fa-brain method-icon-mamdani"></i>
-                                Metode Mamdani
-                            </h4>
-                        </div>
-                        <div class="score-display-elegant" id="skor-mamdani">-</div>
-                        <div class="category-badge-elegant" id="category-badge-mamdani">
-                            <span id="kategori-mamdani">-</span>
-                        </div>
-                        <div class="interpretation-elegant" style="margin-top: 20px; text-align: left;">
-                            <h5 style="font-size: 0.95rem; margin-bottom: 12px; color: #444; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-lightbulb" style="color: #f39c12; font-size: 0.9rem;"></i>
-                                Interpretasi Hasil
-                            </h5>
-                            <p id="interpretation-text-mamdani" style="margin: 0; font-size: 0.9rem; color: #555; line-height: 1.6;">
-                                <!-- Text akan diisi berdasarkan kategori -->
-                            </p>
-                        </div>
+
+    <!-- HASIL + GRAFIK -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-5">
+            <div class="simple-result-card h-100">
+
+                <p class="text-muted mb-1">Hasil Metode Mamdani</p>
+                <h3 class="fw-bold mb-4">Tingkat Stres Anda</h3>
+
+                <div class="text-center">
+                    <div class="score-circle">
+                        <span id="skor-mamdani">-</span>
                     </div>
 
-                    <div class="chart-container-elegant">
-                        <div class="chart-wrapper-elegant">
-                            <img id="mamdani-img" class="chart-image-elegant" src="" alt="Grafik Mamdani Python" />
-                        </div>
+                    <div class="mt-3">
+                        <span class="badge fs-6 px-4 py-2" id="category-badge-mamdani">
+                            <span id="kategori-mamdani">-</span>
+                        </span>
                     </div>
                 </div>
 
             </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="info-box h-100">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-graph-up text-primary me-2"></i>
+                    Visualisasi Hasil
+                </h5>
+
+                <div class="chart-wrapper-elegant">
+                    <img id="mamdani-img"
+                        class="chart-image-elegant"
+                        src=""
+                        alt="Grafik Mamdani Python" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- INTERPRETASI + PERHITUNGAN -->
+    <div class="row g-4">
+
+        <div class="col-lg-6">
+            <div class="info-box h-100">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-info-circle text-primary me-2"></i>
+                    Apa Maksud Hasil Ini?
+                </h5>
+
+                <p id="interpretation-text-mamdani"
+                    class="text-muted mb-0"
+                    style="line-height: 1.8;">
+                    Memuat interpretasi hasil...
+                </p>
+                <hr class="my-3">
+
+<h6 class="fw-bold mb-3">
+    <i class="bi bi-stars text-warning me-2"></i>
+    Hal yang Perlu Diperhatikan
+</h6>
+
+<div class="text-muted" style="line-height:1.8;">
+    Hasil metode Mamdani mempertimbangkan keseluruhan area fuzzy sehingga
+    lebih sensitif terhadap perubahan nilai TPS dan MW. Oleh karena itu,
+    perubahan kecil pada pola pengerjaan skripsi maupun manajemen waktu
+    dapat memengaruhi tingkat stres yang dihasilkan.
+</div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="info-box h-100">
+                <h5 class="fw-bold mb-3">
+                    <i class="bi bi-calculator text-primary me-2"></i>
+                    Ringkasan Perhitungan
+                </h5>
+
+                <div class="calculation-step">
+                    <strong>1. Fuzzifikasi</strong>
+                    <span>TPS dan MW diubah menjadi derajat keanggotaan fuzzy.</span>
+                </div>
+
+                <div class="calculation-step">
+                    <strong>2. Inferensi</strong>
+                    <span>Aturan fuzzy digabungkan untuk membentuk area output.</span>
+                </div>
+
+                <div class="calculation-step">
+                    <strong>3. Defuzzifikasi Centroid</strong>
+                    <span>Nilai akhir diambil dari titik pusat area hasil fuzzy.</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- REKOMENDASI -->
+    <div class="info-box mt-4">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-heart-pulse text-danger me-2"></i>
+            Rekomendasi
+        </h5>
+
+        <div id="recommendation-mamdani" class="row g-3">
+        </div>
+    </div>
+
+</div>
 
             <!-- Comparison Result -->
             <div id="comparison" class="method-content">
                 <!-- Kesimpulan Perbandingan -->
-                <div class="conclusion-card">
-                    <div class="conclusion-header">
-                        <i class="fas fa-lightbulb conclusion-icon"></i>
-                        <h4 class="conclusion-title">Kesimpulan Perbandingan Metode</h4>
-                    </div>
-                    <div class="conclusion-content" id="conclusion-text">
-                        Memproses data untuk menampilkan kesimpulan perbandingan...
-                    </div>
-                </div>
+<div class="conclusion-card">
+    <div class="conclusion-header">
+        <i class="fas fa-clipboard-check conclusion-icon"></i>
+        <h4 class="conclusion-title">Ringkasan Hasil Anda</h4>
+    </div>
+
+    <div class="conclusion-content" id="conclusion-text">
+        Memproses ringkasan hasil...
+    </div>
+</div>
 
                 <!-- Nilai Perbandingan Highlighted -->
-                <div class="comparison-values-grid">
-                    <div class="value-box">
-                        <div class="value-box-label">Tsukamoto</div>
-                        <div class="value-box-number" id="highlight-tsukamoto">-</div>
-                        <div class="value-box-unit" id="highlight-kat-tsukamoto">-</div>
-                    </div>
-                    <div class="value-box">
-                        <div class="value-box-label">Selisih</div>
-                        <div class="value-box-number" id="highlight-selisih">-</div>
-                        <div class="value-box-unit">Perbedaan Nilai</div>
-                    </div>
-                    <div class="value-box">
-                        <div class="value-box-label">Mamdani</div>
-                        <div class="value-box-number" id="highlight-mamdani">-</div>
-                        <div class="value-box-unit" id="highlight-kat-mamdani">-</div>
-                    </div>
-                </div>
+                <div class="row g-4 align-items-stretch">
 
-                <!-- Grafik Perbandingan -->
-                <div class="comparison-chart-section">
-                    <div class="chart-header-elegant">
-                        <h5 class="chart-title-elegant">
-                            <i class="fas fa-chart-line chart-icon"></i>
-                            Grafik Perbandingan Output Metode
-                        </h5>
-                    </div>
-                    <div class="chart-container-elegant">
-                        <img id="comparison-img" class="comparison-image-elegant" src="" alt="Grafik perbandingan" />
-                    </div>
-                    <p style="font-size: 0.85rem; color: #666; text-align: center; margin-top: 12px; font-style: italic;">
-                        Catatan: Garis putus-putus menunjukkan output hasil defuzzifikasi dari masing-masing metode berdasarkan rule base yang sama.
-                    </p>
-                </div>
+    <!-- GRAFIK -->
+    <div class="col-lg-8">
+        <div class="comparison-chart-section h-100">
+
+            <div class="chart-header-elegant">
+                <h5 class="chart-title-elegant">
+                    <i class="fas fa-chart-line chart-icon"></i>
+                    Grafik Perbandingan Output Metode
+                </h5>
+            </div>
+
+            <div class="chart-container-elegant">
+                <img id="comparison-img"
+                    class="comparison-image-elegant"
+                    src=""
+                    alt="Grafik perbandingan" />
+            </div>
+
+            <p class="small text-muted text-center mt-3 mb-0">
+                Perbandingan hasil defuzzifikasi metode Tsukamoto dan Mamdani.
+            </p>
+
+        </div>
+    </div>
+
+    <!-- VALUE BOX -->
+    <div class="col-lg-4">
+
+        <div class="comparison-values-grid">
+
+            <div class="value-box">
+                <div class="value-box-label"><i class="bi bi-graph-up-arrow"></i> Tsukamoto</div>
+                <div class="value-box-number" id="highlight-tsukamoto">-</div>
+                <div class="value-box-unit" id="highlight-kat-tsukamoto">-</div>
+            </div>
+
+            <div class="value-box">
+                <div class="value-box-label"><i class="bi bi-diagram-3"></i> Selisih</div>
+                <div class="value-box-number" id="highlight-selisih">-</div>
+                <div class="value-box-unit">Perbedaan Nilai</div>
+            </div>
+
+            <div class="value-box">
+                <div class="value-box-label"><i class="bi bi-arrow-left-right"></i> Mamdani</div>
+                <div class="value-box-number" id="highlight-mamdani">-</div>
+                <div class="value-box-unit" id="highlight-kat-mamdani">-</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
                 <!-- Detail Perbandingan -->
                 <div class="comparison-details-section">
-                    <div class="details-header">
+                    {{-- <div class="details-header">
                         <h5 class="details-title">
                             <i class="fas fa-balance-scale details-icon"></i>
                             Analisis Perbandingan Output
@@ -1160,12 +1443,12 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div> --}}
 
                     <div class="method-explanation-modern">
                         <div class="explanation-header">
                             <i class="fas fa-info-circle explanation-icon"></i>
-                            <span class="explanation-title">Penjelasan Perbedaan Metode Defuzzifikasi</span>
+                            <span class="explanation-title">Mengapa Hasilnya Bisa Berbeda?</span>
                         </div>
                         <div class="explanation-content">
                             <div class="method-item-modern">
@@ -1188,7 +1471,7 @@
                             </div>
                             <div class="method-note">
                                 <i class="fas fa-check-circle note-icon"></i>
-                                Kedua metode menggunakan basis rule yang identik dan fuzzifikasi input yang sama. Perbedaan pendekatan defuzzifikasi ini menyebabkan variasi hasil akhir yang terlihat pada tabel di atas.
+                                Kedua metode menggunakan data dan aturan fuzzy yang sama. Perbedaan hasil muncul karena cara menghitung nilai akhirnya berbeda.
                             </div>
                         </div>
                     </div>
@@ -1240,27 +1523,163 @@
             image.src = `/hasil/comparison-image?tps=${encodeURIComponent(tps)}&mw=${encodeURIComponent(mw)}`;
         }
 
-        function getInterpretationText(kategori, nilai, method) {
-            if (kategori === "Rendah") {
-                return `
-                    <strong>Tingkat stres Anda rendah (${nilai}) menggunakan metode ${method}.</strong><br>
-                    Anda mampu mengelola stres dengan baik dalam proses penyusunan skripsi.
-                    Terus jaga keseimbangan antara akademik dan kehidupan pribadi.
-                `;
-            } else if (kategori === "Sedang") {
-                return `
-                    <strong>Tingkat stres Anda sedang (${nilai}) menggunakan metode ${method}.</strong><br>
-                    Anda mengalami beberapa tekanan dalam penyusunan skripsi, namun masih dapat dikendalikan.
-                    Pertimbangkan untuk meningkatkan strategi coping dan manajemen waktu.
-                `;
-            } else {
-                return `
-                    <strong>Tingkat stres Anda tinggi (${nilai}) menggunakan metode ${method}.</strong><br>
-                    Anda mengalami tekanan yang signifikan dalam penyusunan skripsi.
-                    Disarankan untuk mencari dukungan dari dosen pembimbing, teman, atau konselor.
-                `;
-            }
-        }
+function getInterpretationText(kategori, nilai, method) {
+    if (kategori === "Rendah") {
+        return `
+            Nilai akhir Anda adalah <strong>${nilai}</strong> dan termasuk kategori
+            <strong>Stres Rendah</strong>. Artinya, tekanan yang dirasakan masih tergolong ringan
+            dan Anda cenderung mampu mengelola proses penyusunan skripsi dengan baik.
+        `;
+    } else if (kategori === "Sedang") {
+        return `
+            Nilai akhir Anda adalah <strong>${nilai}</strong> dan termasuk kategori
+            <strong>Stres Sedang</strong>. Artinya, Anda mulai merasakan tekanan dalam penyusunan skripsi,
+            tetapi kondisi ini masih dapat dikendalikan dengan pengaturan waktu, istirahat cukup,
+            dan dukungan dari lingkungan sekitar.
+        `;
+    } else {
+        return `
+            Nilai akhir Anda adalah <strong>${nilai}</strong> dan termasuk kategori
+            <strong>Stres Tinggi</strong>. Artinya, tekanan yang dirasakan cukup besar.
+            Disarankan untuk tidak memendam beban sendiri dan mulai mencari dukungan dari dosen pembimbing,
+            teman, keluarga, atau konselor kampus.
+        `;
+    }
+}
+
+function getRecommendationTsukamoto(kategori) {
+    if (kategori === "Rendah") {
+        return `
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>🎧 Dengarkan Musik Santai</h6>
+                    <p>Dengarkan playlist lofi, instrumental, atau musik akustik agar suasana belajar tetap nyaman.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>📅 Pertahankan Jadwal</h6>
+                    <p>Buat jadwal skripsi ringan agar progres tetap berjalan tanpa menumpuk pekerjaan.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>🚶 Healing Ringan</h6>
+                    <p>Luangkan waktu berjalan santai, jajan, atau keluar sebentar agar pikiran tetap segar.</p>
+                </div>
+            </div>
+        `;
+    } else if (kategori === "Sedang") {
+        return `
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>▶️ Konten YouTube Relaksasi</h6>
+                    <p>Tonton konten study with me, meditasi singkat, atau musik lofi untuk membantu fokus.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>⏰ Teknik Pomodoro</h6>
+                    <p>Kerjakan skripsi 25 menit, lalu istirahat 5 menit agar tidak cepat lelah.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>☕ Istirahat Terarah</h6>
+                    <p>Coba healing sederhana seperti ngopi, jalan sore, atau ngobrol dengan teman dekat.</p>
+                </div>
+            </div>
+        `;
+    } else {
+        return `
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>🧘 Latihan Napas</h6>
+                    <p>Coba teknik napas 4-7-8 atau meditasi singkat selama 5–10 menit untuk menenangkan diri.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>👥 Cari Dukungan</h6>
+                    <p>Ceritakan kondisi Anda kepada teman, keluarga, dosen pembimbing, atau konselor kampus.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>🌿 Healing Sejenak</h6>
+                    <p>Ambil jeda dari skripsi, pergi ke tempat tenang, tidur cukup, dan kurangi memaksakan diri.</p>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function getRecommendationMamdani(kategori) {
+    if (kategori === "Rendah") {
+        return `
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>🎧 Musik Santai</h6>
+                    <p>Dengarkan musik lofi atau instrumental agar suasana tetap tenang.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>📅 Jaga Rutinitas</h6>
+                    <p>Tetap buat jadwal skripsi ringan supaya progres tetap stabil.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>🚶 Healing Ringan</h6>
+                    <p>Jalan santai, jajan sebentar, atau ngobrol ringan agar pikiran tetap fresh.</p>
+                </div>
+            </div>
+        `;
+    } else if (kategori === "Sedang") {
+        return `
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>▶️ YouTube Relaksasi</h6>
+                    <p>Tonton konten study with me, lofi, atau meditasi singkat.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>⏰ Pomodoro</h6>
+                    <p>Kerjakan skripsi 25 menit, lalu istirahat 5 menit agar tidak cepat jenuh.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>☕ Istirahat Terarah</h6>
+                    <p>Ambil jeda sebentar seperti ngopi, jalan sore, atau ngobrol dengan teman.</p>
+                </div>
+            </div>
+        `;
+    } else {
+        return `
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>🧘 Tenangkan Diri</h6>
+                    <p>Coba napas perlahan, meditasi singkat, atau dengarkan audio relaksasi.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>👥 Cari Dukungan</h6>
+                    <p>Ceritakan kondisi ke teman, keluarga, dosen pembimbing, atau konselor kampus.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="recommendation-card">
+                    <h6>🌿 Healing Sejenak</h6>
+                    <p>Berhenti sebentar dari skripsi, tidur cukup, dan hindari memaksakan diri.</p>
+                </div>
+            </div>
+        `;
+    }
+}
 
         function getCategoryColor(kategori) {
             if (kategori.toLowerCase() === "rendah") return "category-badge-blue";
@@ -1269,23 +1688,39 @@
             return "";
         }
 
-        function generateConclusion(tsukamoto, mamdani) {
-            const selisih = Math.abs(tsukamoto.nilai - mamdani.nilai).toFixed(2);
-            const kategoriSama = tsukamoto.kategori === mamdani.kategori;
-            let conclusion = "";
+function generateConclusion(tsukamoto, mamdani) {
+    const selisih = Math.abs(
+        tsukamoto.nilai - mamdani.nilai
+    ).toFixed(2);
 
-            if (kategoriSama && selisih < 5) {
-                conclusion = `Kedua metode menghasilkan output yang <span class="conclusion-highlight">konsisten</span> dengan kategori <strong>${tsukamoto.kategori}</strong>. Perbedaan nilai sebesar <strong>${selisih}</strong> menunjukkan keselarasan tinggi dalam interpretasi tingkat stres, meskipun pendekatan defuzzifikasi berbeda (weighted average vs centroid).`;
-            } else if (kategoriSama && selisih >= 5) {
-                conclusion = `Meskipun kedua metode menghasilkan kategori yang sama (<strong>${tsukamoto.kategori}</strong>), terdapat perbedaan nilai yang terlihat jelas sebesar <strong>${selisih}</strong>. Ini mencerminkan sensitivitas berbeda dalam kedua pendekatan defuzzifikasi terhadap distribusi membership function.`;
-            } else {
-                const nilaiTinggi = tsukamoto.nilai > mamdani.nilai ? "Tsukamoto" : "Mamdani";
-                const nilaiRendah = tsukamoto.nilai > mamdani.nilai ? "Mamdani" : "Tsukamoto";
-                conclusion = `Kedua metode menghasilkan kategori <span class="conclusion-highlight">berbeda</span>: Tsukamoto → <strong>${tsukamoto.kategori}</strong> dan Mamdani → <strong>${mamdani.kategori}</strong>. Perbedaan sebesar <strong>${selisih}</strong> disebabkan oleh perbedaan mendasar dalam pendekatan defuzzifikasi. Metode ${nilaiTinggi} menghasilkan nilai lebih tinggi, yang mencerminkan sensitivitas berbeda terhadap tingkat fuzziness input.`;
-            }
+    if (tsukamoto.kategori === mamdani.kategori) {
+        return `
+            Hasil analisis menunjukkan bahwa metode Tsukamoto menghasilkan nilai
+            <strong>${tsukamoto.nilai}</strong> dan metode Mamdani menghasilkan nilai
+            <strong>${mamdani.nilai}</strong>. Meskipun terdapat selisih nilai sebesar
+            <strong>${selisih}</strong>, kedua metode memberikan kategori yang sama yaitu
+            <strong>${tsukamoto.kategori}</strong>.
 
-            return conclusion;
-        }
+            Hal ini menunjukkan bahwa kedua metode memiliki interpretasi yang sejalan terhadap
+            kondisi yang dialami. Dengan kata lain, perbedaan nilai yang dihasilkan tidak
+            memengaruhi kesimpulan akhir mengenai tingkat stres yang diperoleh.
+        `;
+    }
+
+    return `
+        Hasil analisis menunjukkan bahwa metode Tsukamoto menghasilkan nilai
+        <strong>${tsukamoto.nilai}</strong> dengan kategori
+        <strong>${tsukamoto.kategori}</strong>, sedangkan metode Mamdani menghasilkan nilai
+        <strong>${mamdani.nilai}</strong> dengan kategori
+        <strong>${mamdani.kategori}</strong>.
+
+        Perbedaan nilai sebesar <strong>${selisih}</strong> menunjukkan bahwa kedua metode
+        memberikan interpretasi yang berbeda terhadap data yang sama. Pada kasus ini,
+        metode Mamdani menghasilkan tingkat stres yang lebih tinggi dibandingkan metode
+        Tsukamoto. Perbedaan tersebut terjadi karena kedua metode menggunakan pendekatan
+        defuzzifikasi yang berbeda dalam menentukan nilai akhir hasil analisis.
+    `;
+}
 
         // ===========================
         // Main Execution
@@ -1320,6 +1755,8 @@
 
                     const interpretation_tsukamoto = document.getElementById("interpretation-text-tsukamoto");
                     interpretation_tsukamoto.innerHTML = getInterpretationText(hasilTsukamoto.kategori, hasilTsukamoto.nilai, 'Tsukamoto');
+                    document.getElementById("recommendation-tsukamoto").innerHTML =
+    getRecommendationTsukamoto(hasilTsukamoto.kategori);
 
                     // ===== TAMPILKAN MAMDANI =====
                     document.getElementById("skor-mamdani").innerText = hasilMamdani.nilai;
@@ -1330,6 +1767,8 @@
 
                     const interpretation_mamdani = document.getElementById("interpretation-text-mamdani");
                     interpretation_mamdani.innerHTML = getInterpretationText(hasilMamdani.kategori, hasilMamdani.nilai, 'Mamdani');
+                    document.getElementById("recommendation-mamdani").innerHTML =
+    getRecommendationMamdani(hasilMamdani.kategori);
 
                     // Render gambar dari Python
                     renderTsukamotoImage(data.tps, data.mw);
@@ -1337,16 +1776,16 @@
                     renderComparisonImage(data.tps, data.mw);
 
                     // ===== TAMPILKAN PERBANDINGAN =====
-                    document.getElementById("comp-skor-tsukamoto").innerText = hasilTsukamoto.nilai;
-                    document.getElementById("comp-skor-mamdani").innerText = hasilMamdani.nilai;
+                    // document.getElementById("comp-skor-tsukamoto").innerText = hasilTsukamoto.nilai;
+                    // document.getElementById("comp-skor-mamdani").innerText = hasilMamdani.nilai;
 
-                    document.getElementById("comp-kat-tsukamoto").innerText = hasilTsukamoto.kategori;
-                    document.getElementById("comp-kat-tsukamoto").className = "category-cell " + getCategoryColor(hasilTsukamoto.kategori);
+                    // document.getElementById("comp-kat-tsukamoto").innerText = hasilTsukamoto.kategori;
+                    // document.getElementById("comp-kat-tsukamoto").className = "category-cell " + getCategoryColor(hasilTsukamoto.kategori);
 
-                    document.getElementById("comp-kat-mamdani").innerText = hasilMamdani.kategori;
-                    document.getElementById("comp-kat-mamdani").className = "category-cell " + getCategoryColor(hasilMamdani.kategori);
+                    // document.getElementById("comp-kat-mamdani").innerText = hasilMamdani.kategori;
+                    // document.getElementById("comp-kat-mamdani").className = "category-cell " + getCategoryColor(hasilMamdani.kategori);
 
-                    document.getElementById("comp-selisih").innerText = selisihNilai;
+                    // document.getElementById("comp-selisih").innerText = selisihNilai;
 
                     // ===== HIGHLIGHTED VALUES BOX =====
                     document.getElementById("highlight-tsukamoto").innerText = hasilTsukamoto.nilai;
@@ -1362,13 +1801,13 @@
                     document.getElementById("conclusion-text").innerHTML = conclusionText;
 
                     // ===== INTERPRETASI DINAMIS DI TABEL =====
-                    let interpretasiTabel = "";
-                    if (hasilTsukamoto.kategori === hasilMamdani.kategori) {
-                        interpretasiTabel = `Kedua metode mengklasifikasikan tingkat stres ke dalam kategori <strong>${hasilTsukamoto.kategori}</strong> dengan perbedaan nilai <strong>${selisihNilai}</strong>.`;
-                    } else {
-                        interpretasiTabel = `Terjadi perbedaan kategori: Tsukamoto → <strong>${hasilTsukamoto.kategori}</strong>, Mamdani → <strong>${hasilMamdani.kategori}</strong>. Perbedaan nilai sebesar <strong>${selisihNilai}</strong> tercermin dalam perbedaan klasifikasi.`;
-                    }
-                    document.getElementById("comp-interpretasi").innerHTML = interpretasiTabel;
+                    // let interpretasiTabel = "";
+                    // if (hasilTsukamoto.kategori === hasilMamdani.kategori) {
+                    //     interpretasiTabel = `Kedua metode mengklasifikasikan tingkat stres ke dalam kategori <strong>${hasilTsukamoto.kategori}</strong> dengan perbedaan nilai <strong>${selisihNilai}</strong>.`;
+                    // } else {
+                    //     interpretasiTabel = `Terjadi perbedaan kategori: Tsukamoto → <strong>${hasilTsukamoto.kategori}</strong>, Mamdani → <strong>${hasilMamdani.kategori}</strong>. Perbedaan nilai sebesar <strong>${selisihNilai}</strong> tercermin dalam perbedaan klasifikasi.`;
+                    // }
+                    // document.getElementById("comp-interpretasi").innerHTML = interpretasiTabel;
 
                 })
                 .catch(error => {

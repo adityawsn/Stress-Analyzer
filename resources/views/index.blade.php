@@ -163,34 +163,4 @@
         </div>
     </section>
 
-    <!-- FITUR -->
-    {{-- <section class="pb-5">
-        <div class="container">
-            <div class="row g-4">
-
-                <div class="col-md-4">
-                    <div class="card card-custom p-4 text-center">
-                        <h5>📝 Mudah Diisi</h5>
-                        <p>Kuesioner sederhana dan cepat</p>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card card-custom p-4 text-center">
-                        <h5>📊 Hasil Otomatis</h5>
-                        <p>Langsung melihat hasil analisis</p>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card card-custom p-4 text-center">
-                        <h5>🔒 Aman</h5>
-                        <p>Data Anda terjamin keamanannya</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section> --}}
-
 @endsection

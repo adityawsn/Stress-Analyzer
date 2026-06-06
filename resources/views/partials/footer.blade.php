@@ -38,7 +38,7 @@
 
         <!-- Bottom -->
         <div class="text-center small text-muted">
-            Made with 💙 & 💗 | Sistem Analisis Stres Mahasiswa
+            Gigglee | StressAnalyzer
         </div>
 
     </div>
