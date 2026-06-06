@@ -26,7 +26,7 @@ class StudentController extends Controller
             });
         }
 
-        $students = $query->orderBy('created_at', 'desc')
+        $students = $query->orderBy('nama', 'asc')
             ->paginate(20)
             ->withQueryString();
 
