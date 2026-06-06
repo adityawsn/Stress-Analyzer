@@ -17,15 +17,21 @@
             <i class="bi bi-calculator"></i> Pengaturan Fuzzy
         </a> --}}
 
-        <a href="{{ url('/hasil-kuesioner') }}" class="nav-link {{ request()->is('hasil-kuesioner*') ? 'active' : '' }}">
+        <a href="{{ url('/hasil-kuesioner') }}"
+            class="nav-link {{ request()->is('hasil-kuesioner*') ? 'active' : '' }}">
             <i class="bi bi-file-earmark-text"></i> Hasil Kuesioner
         </a>
         <div class="px-4 mt-4 mb-2"><small class="text-uppercase text-muted fw-bold" style="font-size: 10px;">Laporan
                 Penelitian</small></div>
-        <a href="{{ url('/analisis-statistik') }}" class="nav-link {{ request()->is('analisis-statistik') ? 'active' : '' }}">
+        <a href="{{ url('/analisis-statistik') }}"
+            class="nav-link {{ request()->is('analisis-statistik') ? 'active' : '' }}">
             <i class="bi bi-graph-up-arrow"></i> Analisis Statistik
         </a>
-        <a href="{{ url('/') }}" class="nav-link text-danger">
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+            @csrf
+        </form>
+
+        <a href="#" class="nav-link text-danger" onclick="confirmLogout(event)">
             <i class="bi bi-box-arrow-right"></i> Keluar
         </a>
     </div>

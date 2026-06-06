@@ -125,40 +125,62 @@
         <div class="text-center mb-4">
             <div class="brand-logo">Stress<span>Analyzer</span></div>
             <p class="text-muted small">Sistem Analisis Stres Mahasiswa</p>
+            <div class="alert alert-info small mt-2 py-1 px-2" role="alert">
+                <i class="bi bi-shield-lock me-1"></i> <strong>Admin Only</strong> - Akses Terbatas
+            </div>
         </div>
 
-        <form action="index.html" method="GET">
+        <form action="{{ route('login.store') }}" method="POST">
+            @csrf
+
+            @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="fw-bold mb-2">Login Gagal!</div>
+                    @foreach ($errors->all() as $error)
+                        <div>• {{ $error }}</div>
+                    @endforeach
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
             <div class="mb-3">
-                <label class="form-label small fw-bold text-muted">Nama Pengguna</label>
+                <label class="form-label small fw-bold text-muted">Email Admin</label>
                 <div class="input-group">
                     <span class="input-group-text bg-transparent border-end-0 text-muted">
-                        <i class="bi bi-person"></i>
+                        <i class="bi bi-envelope"></i>
                     </span>
-                    <input type="text" class="form-control border-start-0" placeholder="Masukkan Nama Pengguna" required>
+                    <input type="email" name="email" class="form-control border-start-0 @error('email') is-invalid @enderror"
+                           placeholder="Masukkan email admin" value="{{ old('email') }}" required autofocus>
+                    @error('email')
+                        <span class="invalid-feedback d-block">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
 
             <div class="mb-4">
                 <div class="d-flex justify-content-between">
                     <label class="form-label small fw-bold text-muted">Kata Sandi</label>
-                    <a href="#" class="text-decoration-none small text-muted">Lupa Sandi?</a>
                 </div>
                 <div class="input-group">
                     <span class="input-group-text bg-transparent border-end-0 text-muted">
                         <i class="bi bi-lock"></i>
                     </span>
-                    <input type="password" class="form-control border-start-0" placeholder="Masukkan kata sandi" required>
+                    <input type="password" name="password" class="form-control border-start-0 @error('password') is-invalid @enderror"
+                           placeholder="Masukkan kata sandi" required>
+                    @error('password')
+                        <span class="invalid-feedback d-block">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
 
-            <div class="mb-4 form-check">
-                <input type="checkbox" class="form-check-input" id="rememberMe">
+            {{-- <div class="mb-4 form-check">
+                <input type="checkbox" name="remember" class="form-check-input" id="rememberMe">
                 <label class="form-check-label small text-muted" for="rememberMe">Ingat saya di perangkat ini</label>
-            </div>
+            </div> --}}
 
-            <a href="/dashboard" class="btn btn-primary btn-login w-100">
+            <button type="submit" class="btn btn-primary btn-login w-100">
                 Masuk ke Dashboard <i class="bi bi-arrow-right ms-2"></i>
-            </a>
+            </button>
         </form>
 
         <div class="divider"></div>

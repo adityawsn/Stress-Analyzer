@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\QuestionnaireController;
@@ -110,18 +111,26 @@ Route::get('/hasil/mamdani-image', function (Request $request) {
 
 
 
-Route::get('/dashboard', [DashboardController::class, 'index']);
-Route::get('/data-mahasiswa', [StudentController::class, 'index']);
-route::get('/pengaturan-fuzzy', function () {
-    return view('admin.setting.index');
-});
-route::get('/hasil-kuesioner', [ResultController::class, 'index'])->name('hasil.index');
-route::get('/hasil-kuesioner/{id}/detail', [ResultController::class, 'detail']);
-route::get('/hasil-kuesioner/impor', [ResultController::class, 'import'])->name('hasil.import');
-route::post('/hasil-kuesioner/impor', [ResultController::class, 'storeImport'])->name('hasil.storeImport');
-route::get('/hasil-kuesioner/export', [ResultController::class, 'export'])->name('hasil.export');
-Route::get('/analisis-statistik', [DashboardController::class, 'statistics']);
+// ============================================
+// Authentication Routes - Admin Only
+// ============================================
+Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AdminAuthController::class, 'login'])->name('login.store');
+Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
-route::get('/login', function () {
-    return view('auth.login');
+// ============================================
+// Protected Routes - Require Admin Role
+// ============================================
+Route::middleware(['auth', 'is_admin', 'prevent_back_history'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/data-mahasiswa', [StudentController::class, 'index']);
+    route::get('/pengaturan-fuzzy', function () {
+        return view('admin.setting.index');
+    });
+    route::get('/hasil-kuesioner', [ResultController::class, 'index'])->name('hasil.index');
+    route::get('/hasil-kuesioner/{id}/detail', [ResultController::class, 'detail']);
+    route::get('/hasil-kuesioner/impor', [ResultController::class, 'import'])->name('hasil.import');
+    route::post('/hasil-kuesioner/impor', [ResultController::class, 'storeImport'])->name('hasil.storeImport');
+    route::get('/hasil-kuesioner/export', [ResultController::class, 'export'])->name('hasil.export');
+    Route::get('/analisis-statistik', [DashboardController::class, 'statistics']);
 });

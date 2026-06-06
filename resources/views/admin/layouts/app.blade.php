@@ -25,6 +25,38 @@
     </div>
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault();
+
+            const logoutForm = document.getElementById('logout-form');
+
+            if (typeof Swal === 'undefined') {
+                if (confirm('Apakah Anda yakin ingin keluar?')) {
+                    logoutForm.submit();
+                }
+
+                return;
+            }
+
+            Swal.fire({
+                title: 'Keluar dari Dashboard?',
+                text: 'Anda harus login kembali untuk mengakses halaman admin.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, keluar',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    logoutForm.submit();
+                }
+            });
+        }
+    </script>
 </body>
 </html>
