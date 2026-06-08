@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\ResultController;
 use App\Http\Controllers\QuestionnaireController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Services\FuzzyCalculator;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,21 +56,11 @@ Route::get('/hasil/comparison-image', function (Request $request) {
         ->header('Content-Type', 'image/png');
 });
 
-Route::get('/hasil/calculate', function (Request $request) {
+Route::get('/hasil/calculate', function (Request $request, FuzzyCalculator $fuzzyCalculator) {
     $tps = floatval($request->query('tps', 0));
     $mw = floatval($request->query('mw', 0));
-    $script = base_path('python/fuzzy_calculator.py');
-    $cmd = 'python ' . escapeshellarg($script) . ' calculate ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
-    $output = null;
-    $retval = null;
 
-    exec($cmd, $output, $retval);
-    if ($retval !== 0 || empty($output)) {
-        return response()->json(['error' => 'Gagal menghitung fuzzy logic'], 500);
-    }
-
-    $result = json_decode(implode('', $output), true);
-    return response()->json($result);
+    return response()->json($fuzzyCalculator->calculate($tps, $mw));
 });
 
 Route::get('/hasil/tsukamoto-image', function (Request $request) {

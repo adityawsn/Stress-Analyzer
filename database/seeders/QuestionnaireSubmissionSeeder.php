@@ -2,13 +2,16 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\QuestionnaireSubmission;
+use App\Services\FuzzyCalculator;
+use Illuminate\Database\Seeder;
 
 class QuestionnaireSubmissionSeeder extends Seeder
 {
     public function run(): void
     {
+        $calculator = app(FuzzyCalculator::class);
+
         $samples = [
             [
                 'nama' => 'Aditya Wisnu Setya Pamungkas',
@@ -62,36 +65,46 @@ class QuestionnaireSubmissionSeeder extends Seeder
                 'tps' => 72,
                 'mw' => 92,
             ],
-            [
-                'nama' => 'Nicho Ray',
-                'email' => 'nicho@example.com',
-                'gender' => 'Laki-laki',
-                'umur' => 22,
-                'jenjang' => 'D4 / S1',
-                'kampus' => 'Politeknik Negeri Indramayu',
-                'jurusan' => 'Teknik Infomatika',
-                'prodi' => 'Rekayasa Perangkat Lunak',
-                'status' => 'Proses',
-                'tahun' => 2026,
-                'answers' => [
-                    'q1' => 5,
-                    'q2' => 1,
-                    'q3' => 3,
-                    'q4' => 5,
-                    'q5' => 5,
-                    'q6' => 5,
-                    'q7' => 1,
-                    'q8' => 1,
-                    'q9' => 3,
-                    'q10' => 3,
-                ],
-                'tps' => 76,
-                'mw' => 52,
-            ],
+            // [
+            //     'nama' => 'Nicho Ray',
+            //     'email' => 'nicho@example.com',
+            //     'gender' => 'Laki-laki',
+            //     'umur' => 22,
+            //     'jenjang' => 'D4 / S1',
+            //     'kampus' => 'Politeknik Negeri Indramayu',
+            //     'jurusan' => 'Teknik Infomatika',
+            //     'prodi' => 'Rekayasa Perangkat Lunak',
+            //     'status' => 'Proses',
+            //     'tahun' => 2026,
+            //     'answers' => [
+            //         'q1' => 5,
+            //         'q2' => 1,
+            //         'q3' => 3,
+            //         'q4' => 5,
+            //         'q5' => 5,
+            //         'q6' => 5,
+            //         'q7' => 1,
+            //         'q8' => 1,
+            //         'q9' => 3,
+            //         'q10' => 3,
+            //     ],
+            //     'tps' => 76,
+            //     'mw' => 52,
+            // ],
         ];
 
         foreach ($samples as $sample) {
-            QuestionnaireSubmission::firstOrCreate(
+            $fuzzy = $calculator->calculate((float) $sample['tps'], (float) $sample['mw']);
+
+            $sample = array_merge($sample, [
+                'tsukamoto_nilai' => $fuzzy['tsukamoto']['nilai'],
+                'tsukamoto_kategori' => $fuzzy['tsukamoto']['kategori'],
+                'mamdani_nilai' => $fuzzy['mamdani']['nilai'],
+                'mamdani_kategori' => $fuzzy['mamdani']['kategori'],
+                'selisih' => $fuzzy['selisih'],
+            ]);
+
+            QuestionnaireSubmission::updateOrCreate(
                 ['email' => $sample['email']],
                 $sample
             );

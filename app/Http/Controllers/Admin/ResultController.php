@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\QuestionnaireSubmission;
+use App\Services\FuzzyCalculator;
 use Illuminate\Http\Request;
 
 class ResultController extends Controller
 {
+    public function __construct(private FuzzyCalculator $fuzzyCalculator)
+    {
+    }
+
     public function index(Request $request)
     {
         $results = QuestionnaireSubmission::query();
@@ -29,13 +34,7 @@ class ResultController extends Controller
             ->withQueryString();
 
         $results->getCollection()->transform(function (QuestionnaireSubmission $submission) {
-            $submission->tsukamoto = $this->hitungTsukamoto($submission->tps, $submission->mw);
-            $submission->mamdani = $this->hitungMamdani($submission->tps, $submission->mw);
-            $submission->selisih = abs(
-                $submission->tsukamoto['nilai'] - $submission->mamdani['nilai']
-            );
-
-            return $submission;
+            return $this->attachFuzzyResult($submission);
         });
 
         return view('admin.hasil.index', compact('results'));
@@ -44,10 +43,7 @@ class ResultController extends Controller
     public function detail($id)
     {
         $submission = QuestionnaireSubmission::findOrFail($id);
-
-        $submission->tsukamoto = $this->hitungTsukamoto($submission->tps, $submission->mw);
-        $submission->mamdani = $this->hitungMamdani($submission->tps, $submission->mw);
-        $submission->selisih = abs($submission->tsukamoto['nilai'] - $submission->mamdani['nilai']);
+        $submission = $this->attachFuzzyResult($submission);
 
         return response()->json([
             'nama' => $submission->nama,
@@ -83,8 +79,9 @@ class ResultController extends Controller
         $rowNumber = 0;
         foreach ($subs as $s) {
             $rowNumber++;
-            $ts = $this->hitungTsukamoto($s->tps, $s->mw);
-            $mm = $this->hitungMamdani($s->tps, $s->mw);
+            $fuzzy = $this->resolveFuzzyResult($s);
+            $ts = $fuzzy['tsukamoto'];
+            $mm = $fuzzy['mamdani'];
             $answers = is_array($s->answers) ? $s->answers : [];
 
             $row = [
@@ -113,7 +110,7 @@ class ResultController extends Controller
             $row['tsukamoto_kategori'] = $ts['kategori'];
             $row['mamdani_nilai'] = $mm['nilai'];
             $row['mamdani_kategori'] = $mm['kategori'];
-            $selisih = round(abs($ts['nilai'] - $mm['nilai']), 2);
+            $selisih = $fuzzy['selisih'];
             // ensure explicit zero is written (not left empty) when difference is exactly 0
             if ($selisih === 0.0) {
                 // use explicit string '0' to avoid empty cells in exported files
@@ -169,179 +166,46 @@ class ResultController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    private function trapmf(float $x, float $a, float $b, float $c, float $d): float
+    private function attachFuzzyResult(QuestionnaireSubmission $submission): QuestionnaireSubmission
     {
-        $y = 0.0;
+        $fuzzy = $this->resolveFuzzyResult($submission);
 
-        if ($a === $b) {
-            if ($x <= $b) {
-                return 1.0;
-            }
-        } else {
-            if ($x >= $a && $x < $b) {
-                $y = ($x - $a) / ($b - $a);
-            }
-        }
+        $submission->tsukamoto = $fuzzy['tsukamoto'];
+        $submission->mamdani = $fuzzy['mamdani'];
+        $submission->selisih = $fuzzy['selisih'];
 
-        if ($x >= $b && $x <= $c) {
-            $y = 1.0;
-        }
-
-        if ($c === $d) {
-            if ($x >= $c) {
-                return 1.0;
-            }
-        } else {
-            if ($x > $c && $x <= $d) {
-                $y = ($d - $x) / ($d - $c);
-            }
-        }
-
-        return max(0.0, min(1.0, $y));
+        return $submission;
     }
 
-    private function trimf(float $x, float $a, float $b, float $c): float
+    private function resolveFuzzyResult(QuestionnaireSubmission $submission): array
     {
-        if ($x <= $a || $x >= $c) {
-            return 0.0;
+        if ($submission->tsukamoto_nilai !== null && $submission->mamdani_nilai !== null) {
+            $tsukamotoNilai = (float) $submission->tsukamoto_nilai;
+            $mamdaniNilai = (float) $submission->mamdani_nilai;
+
+            return [
+                'tps' => (float) $submission->tps,
+                'mw' => (float) $submission->mw,
+                'tsukamoto' => [
+                    'nilai' => $tsukamotoNilai,
+                    'kategori' => $submission->tsukamoto_kategori ?: $this->getCategory($tsukamotoNilai),
+                ],
+                'mamdani' => [
+                    'nilai' => $mamdaniNilai,
+                    'kategori' => $submission->mamdani_kategori ?: $this->getCategory($mamdaniNilai),
+                ],
+                'selisih' => $submission->selisih !== null
+                    ? (float) $submission->selisih
+                    : round(abs($tsukamotoNilai - $mamdaniNilai), 2),
+            ];
         }
 
-        if ($x == $b) {
-            return 1.0;
-        }
-
-        if ($x > $a && $x < $b) {
-            return ($x - $a) / ($b - $a);
-        }
-
-        if ($x > $b && $x < $c) {
-            return ($c - $x) / ($c - $b);
-        }
-
-        return 0.0;
-    }
-
-    private function fuzzifyTps(float $x): array
-    {
-        return [
-            $this->trapmf($x, 0, 0, 30, 50),
-            $this->trimf($x, 30, 50, 70),
-            $this->trapmf($x, 50, 70, 100, 100),
-        ];
-    }
-
-    private function fuzzifyMw(float $x): array
-    {
-        return [
-            $this->trapmf($x, 0, 0, 30, 50),
-            $this->trimf($x, 30, 50, 70),
-            $this->trapmf($x, 50, 70, 100, 100),
-        ];
-    }
-
-    private function hitungTsukamoto(float $tps, float $mw): array
-    {
-        [$tpsRendah, $tpsSedang, $tpsTinggi] = $this->fuzzifyTps($tps);
-        [$mwBuruk, $mwCukup, $mwBaik] = $this->fuzzifyMw($mw);
-
-        $rules = [
-            min($tpsRendah, $mwBuruk),
-            min($tpsRendah, $mwCukup),
-            min($tpsRendah, $mwBaik),
-            min($tpsSedang, $mwBuruk),
-            min($tpsSedang, $mwCukup),
-            min($tpsSedang, $mwBaik),
-            min($tpsTinggi, $mwBuruk),
-            min($tpsTinggi, $mwCukup),
-            min($tpsTinggi, $mwBaik),
-        ];
-
-        $zValues = [
-            30 + 20 * $rules[0],
-            50 - 20 * $rules[1],
-            50 - 20 * $rules[2],
-            50 + 20 * $rules[3],
-            30 + 20 * $rules[4],
-            50 - 20 * $rules[5],
-            50 + 20 * $rules[6],
-            50 + 20 * $rules[7],
-            30 + 20 * $rules[8],
-        ];
-
-        $alphaSum = array_sum($rules);
-        $value = 0.0;
-        if ($alphaSum > 0) {
-            $sum = 0.0;
-            foreach ($rules as $index => $rule) {
-                $sum += $rule * $zValues[$index];
-            }
-            $value = $sum / $alphaSum;
-        }
-
-        $value = round($value, 2);
-        $kategori = $this->getCategory($value);
-
-        return ['nilai' => $value, 'kategori' => $kategori];
-    }
-
-    private function hitungMamdani(float $tps, float $mw): array
-    {
-        [$tpsRendah, $tpsSedang, $tpsTinggi] = $this->fuzzifyTps($tps);
-        [$mwBuruk, $mwCukup, $mwBaik] = $this->fuzzifyMw($mw);
-
-        $rules = [
-            min($tpsRendah, $mwBuruk),
-            min($tpsRendah, $mwCukup),
-            min($tpsRendah, $mwBaik),
-            min($tpsSedang, $mwBuruk),
-            min($tpsSedang, $mwCukup),
-            min($tpsSedang, $mwBaik),
-            min($tpsTinggi, $mwBuruk),
-            min($tpsTinggi, $mwCukup),
-            min($tpsTinggi, $mwBaik),
-        ];
-
-        $outputRendah = max($rules[1], $rules[2], $rules[5]);
-        $outputSedang = max($rules[0], $rules[4], $rules[8]);
-        $outputTinggi = max($rules[3], $rules[6], $rules[7]);
-
-        $numerator = 0.0;
-        $denominator = 0.0;
-
-        for ($i = 0; $i <= 500; $i++) {
-            $x = $i * 0.2;
-            $rendah = $this->trapmf($x, 0, 0, 30, 50);
-            $sedang = $this->trimf($x, 30, 50, 70);
-            $tinggi = $this->trapmf($x, 50, 70, 100, 100);
-
-            $aggregated = max(
-                min($outputRendah, $rendah),
-                min($outputSedang, $sedang),
-                min($outputTinggi, $tinggi)
-            );
-
-            $numerator += $x * $aggregated;
-            $denominator += $aggregated;
-        }
-
-        $value = $denominator === 0.0 ? 0.0 : $numerator / $denominator;
-        $value = round($value, 2);
-        $kategori = $this->getCategory($value);
-
-        return ['nilai' => $value, 'kategori' => $kategori];
+        return $this->fuzzyCalculator->calculate((float) $submission->tps, (float) $submission->mw);
     }
 
     private function getCategory(float $value): string
     {
-        if ($value <= 30) {
-            return 'Rendah';
-        }
-
-        if ($value <= 70) {
-            return 'Sedang';
-        }
-
-        return 'Tinggi';
+        return $this->fuzzyCalculator->getCategory($value);
     }
 
     private function generateDeskripsi(float $tsukamoto, float $mamdani, float $selisih): string
@@ -463,6 +327,9 @@ class ResultController extends Controller
                     // Calculate MW (q6-q10 average * 20)
                     $mwSum = $answers['q6'] + $answers['q7'] + $answers['q8'] + $answers['q9'] + $answers['q10'];
                     $mw = ($mwSum / 5) * 20;
+                    $tps = round($tps, 2);
+                    $mw = round($mw, 2);
+                    $fuzzy = $this->fuzzyCalculator->calculate($tps, $mw);
 
                     // Check if email already exists
                     if (QuestionnaireSubmission::where('email', $data['email'])->exists()) {
@@ -483,8 +350,13 @@ class ResultController extends Controller
                         'status' => $data['status'],
                         'tahun' => (int)$data['tahun'],
                         'answers' => $answers,
-                        'tps' => round($tps, 2),
-                        'mw' => round($mw, 2),
+                        'tps' => $tps,
+                        'mw' => $mw,
+                        'tsukamoto_nilai' => $fuzzy['tsukamoto']['nilai'],
+                        'tsukamoto_kategori' => $fuzzy['tsukamoto']['kategori'],
+                        'mamdani_nilai' => $fuzzy['mamdani']['nilai'],
+                        'mamdani_kategori' => $fuzzy['mamdani']['kategori'],
+                        'selisih' => $fuzzy['selisih'],
                     ]);
 
                     $imported++;

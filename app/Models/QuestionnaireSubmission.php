@@ -23,12 +23,20 @@ class QuestionnaireSubmission extends Model
         'answers',
         'tps',
         'mw',
+        'tsukamoto_nilai',
+        'tsukamoto_kategori',
+        'mamdani_nilai',
+        'mamdani_kategori',
+        'selisih',
     ];
 
     protected $casts = [
         'answers' => 'array',
         'tps' => 'float',
         'mw' => 'float',
+        'tsukamoto_nilai' => 'float',
+        'mamdani_nilai' => 'float',
+        'selisih' => 'float',
         'umur' => 'integer',
         'tahun' => 'integer',
     ];

@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\QuestionnaireSubmission;
-use Illuminate\Support\Facades\Cache;
+use App\Services\FuzzyCalculator;
 
 class DashboardController extends Controller
 {
+    public function __construct(private FuzzyCalculator $fuzzyCalculator)
+    {
+    }
+
     public function index()
     {
         $subs = QuestionnaireSubmission::all();
@@ -163,16 +167,16 @@ class DashboardController extends Controller
 
         // Top stressor counts from answers (q1..q10)
         $questions = [
-            'q1' => 'Kesulitan menentukan judul (X1)',
-            'q2' => 'Kesulitan bimbingan dengan dosen (X1)',
-            'q3' => 'Beban revisi (X1)',
-            'q4' => 'Tuntutan lulus tepat waktu (X1)',
-            'q5' => 'Kecemasan terhadap hasil akhir (X1)',
-            'q6' => 'Perencanaan Jadwal (X2)',
-            'q7' => 'Kedisiplinan mengerjakan skripsi (X2)',
-            'q8' => 'Kemampuan menentukan prioritas (X2)',
-            'q9' => 'Konsistensi pengerjaan (X2)',
-            'q10' => 'Mengendalikan kebiasaan menunda (X2)',
+            'q1' => 'Kesulitan menentukan judul (Q1)',
+            'q2' => 'Kesulitan bimbingan dengan dosen (Q2)',
+            'q3' => 'Beban revisi (Q3)',
+            'q4' => 'Tuntutan lulus tepat waktu (Q4)',
+            'q5' => 'Kecemasan terhadap hasil akhir (Q5)',
+            'q6' => 'Perencanaan Jadwal (Q6)',
+            'q7' => 'Kedisiplinan mengerjakan skripsi (Q7)',
+            'q8' => 'Kemampuan menentukan prioritas (Q8)',
+            'q9' => 'Konsistensi pengerjaan (Q9)',
+            'q10' => 'Mengendalikan kebiasaan menunda (Q10)',
         ];
         $stressorSums = array_fill_keys(array_keys($questions), 0.0);
         $stressorCounts = array_fill_keys(array_keys($questions), 0);
@@ -241,29 +245,28 @@ class DashboardController extends Controller
 
     private function getFuzzyResult(QuestionnaireSubmission $submission): array
     {
-        $script = base_path('python/fuzzy_calculator.py');
-        $cacheKey = 'fuzzy_result:' . $submission->id;
+        if ($submission->tsukamoto_nilai !== null && $submission->mamdani_nilai !== null) {
+            $tsukamotoNilai = (float) $submission->tsukamoto_nilai;
+            $mamdaniNilai = (float) $submission->mamdani_nilai;
 
-        $result = Cache::remember($cacheKey, 60 * 24, function () use ($script, $submission) {
-            $tps = floatval($submission->tps);
-            $mw = floatval($submission->mw);
-            $cmd = 'python ' . escapeshellarg($script) . ' calculate ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
-            $output = null;
-            $retval = null;
-            exec($cmd, $output, $retval);
-            if ($retval === 0 && !empty($output)) {
-                $decoded = json_decode(implode('', $output), true);
-                if (is_array($decoded)) {
-                    return $decoded;
-                }
-            }
             return [
-                'tsukamoto' => ['nilai' => 0, 'kategori' => 'N/A'],
-                'mamdani' => ['nilai' => 0, 'kategori' => 'N/A'],
+                'tps' => (float) $submission->tps,
+                'mw' => (float) $submission->mw,
+                'tsukamoto' => [
+                    'nilai' => $tsukamotoNilai,
+                    'kategori' => $submission->tsukamoto_kategori ?: $this->getCategory($tsukamotoNilai),
+                ],
+                'mamdani' => [
+                    'nilai' => $mamdaniNilai,
+                    'kategori' => $submission->mamdani_kategori ?: $this->getCategory($mamdaniNilai),
+                ],
+                'selisih' => $submission->selisih !== null
+                    ? (float) $submission->selisih
+                    : round(abs($tsukamotoNilai - $mamdaniNilai), 2),
             ];
-        });
+        }
 
-        return $result;
+        return $this->fuzzyCalculator->calculate((float) $submission->tps, (float) $submission->mw);
     }
 
     private function safeMean(array $values): float
@@ -289,14 +292,6 @@ class DashboardController extends Controller
 
     private function getCategory(float $value): string
     {
-        if ($value <= 30) {
-            return 'Rendah';
-        }
-
-        if ($value <= 70) {
-            return 'Sedang';
-        }
-
-        return 'Tinggi';
+        return $this->fuzzyCalculator->getCategory($value);
     }
 }

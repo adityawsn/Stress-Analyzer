@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\QuestionnaireSubmission;
+use App\Services\FuzzyCalculator;
 use Illuminate\Http\Request;
 
 class QuestionnaireController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request, FuzzyCalculator $fuzzyCalculator)
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
@@ -26,6 +27,8 @@ class QuestionnaireController extends Controller
             'mw' => 'required|numeric|min:0|max:100',
         ]);
 
+        $fuzzy = $fuzzyCalculator->calculate((float) $validated['tps'], (float) $validated['mw']);
+
         $submission = QuestionnaireSubmission::create([
             'nama' => $validated['nama'],
             'email' => $validated['email'],
@@ -40,6 +43,11 @@ class QuestionnaireController extends Controller
             'answers' => $validated['answers'],
             'tps' => $validated['tps'],
             'mw' => $validated['mw'],
+            'tsukamoto_nilai' => $fuzzy['tsukamoto']['nilai'],
+            'tsukamoto_kategori' => $fuzzy['tsukamoto']['kategori'],
+            'mamdani_nilai' => $fuzzy['mamdani']['nilai'],
+            'mamdani_kategori' => $fuzzy['mamdani']['kategori'],
+            'selisih' => $fuzzy['selisih'],
         ]);
 
         return response()->json([
