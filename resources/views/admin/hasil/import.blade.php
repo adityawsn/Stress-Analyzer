@@ -109,6 +109,13 @@
                 </div>
             @endif
 
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                    <i class="bi bi-exclamation-circle-fill"></i> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
             @if (session('warning'))
                 <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
                     <i class="bi bi-exclamation-triangle-fill"></i> {{ session('warning') }}
@@ -135,7 +142,8 @@
                                 <!-- File Input -->
                                 <div class="mb-4">
                                     <label class="form-label fw-bold">Pilih File</label>
-                                    <input type="file" name="file" id="fileInput" class="form-control form-control-sm"
+                                    <input type="file" name="file" id="fileInput"
+                                        class="form-control form-control-sm @error('file') is-invalid @enderror"
                                         accept=".csv,.txt,.xlsx,.xls" required>
                                     <div class="small text-muted mt-2">
                                         <i class="bi bi-info-circle"></i> Format: CSV, TXT, XLSX, XLS (max. 5 MB)

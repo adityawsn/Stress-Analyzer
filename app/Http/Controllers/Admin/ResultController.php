@@ -6,9 +6,36 @@ use App\Http\Controllers\Controller;
 use App\Models\QuestionnaireSubmission;
 use App\Services\FuzzyCalculator;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Validation\ValidationException;
 
 class ResultController extends Controller
 {
+    private const IMPORT_ALLOWED_EXTENSIONS = ['csv', 'txt', 'xlsx', 'xls'];
+
+    private const IMPORT_REQUIRED_COLUMNS = [
+        'nama',
+        'email',
+        'gender',
+        'umur',
+        'jenjang',
+        'kampus',
+        'jurusan',
+        'prodi',
+        'status',
+        'tahun',
+        'q1',
+        'q2',
+        'q3',
+        'q4',
+        'q5',
+        'q6',
+        'q7',
+        'q8',
+        'q9',
+        'q10',
+    ];
+
     public function __construct(private FuzzyCalculator $fuzzyCalculator)
     {
     }
@@ -232,12 +259,20 @@ class ResultController extends Controller
     public function storeImport(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:csv,txt,xlsx,xls|max:5120',
+            'file' => 'bail|required|file|max:5120|extensions:' . implode(',', self::IMPORT_ALLOWED_EXTENSIONS),
+        ], [
+            'file.required' => 'Silakan pilih file CSV, TXT, XLSX, atau XLS untuk diimpor.',
+            'file.file' => 'File unggahan tidak valid. Silakan pilih file CSV, TXT, XLSX, atau XLS.',
+            'file.max' => 'Ukuran file maksimal 5 MB.',
+            'file.extensions' => 'Format file tidak didukung. Gunakan file CSV, TXT, XLSX, atau XLS.',
         ]);
 
         $file = $request->file('file');
+        $this->validateImportFile($file);
+
         $path = $file->getRealPath();
         $fileName = $file->getClientOriginalName();
+        $extension = strtolower($file->getClientOriginalExtension());
 
         try {
             $rows = [];
@@ -245,7 +280,7 @@ class ResultController extends Controller
             $errors = [];
 
             // Determine file type and parse accordingly
-            if (in_array($file->getClientOriginalExtension(), ['xlsx', 'xls'])) {
+            if (in_array($extension, ['xlsx', 'xls'], true)) {
                 // Parse Excel
                 if (class_exists(\PhpOffice\PhpSpreadsheet\IOFactory::class)) {
                     $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
@@ -263,21 +298,25 @@ class ResultController extends Controller
                 fclose($file_handle);
             }
 
-            if (empty($rows) || count($rows) < 2) {
-                return back()->with('error', 'File kosong atau format tidak sesuai.');
+            if (empty($rows) || count($rows) < 2 || ! $this->hasImportDataRows($rows)) {
+                throw ValidationException::withMessages([
+                    'file' => 'File yang diunggah kosong atau belum berisi data responden. Isi minimal satu baris data sesuai template impor.',
+                ]);
             }
 
             // Parse header
-            $header = array_map('trim', $rows[0]);
+            $header = $this->normalizeImportHeader($rows[0]);
             $headerMap = array_flip($header);
 
             // Required columns
-            $required = ['nama', 'email', 'gender', 'umur', 'jenjang', 'kampus', 'jurusan', 'prodi', 'status', 'tahun',
-                         'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
+            $required = self::IMPORT_REQUIRED_COLUMNS;
 
-            $missing = array_diff($required, $header);
+            $missing = array_values(array_diff($required, $header));
             if (!empty($missing)) {
-                return back()->with('error', 'Kolom yang diperlukan tidak ditemukan: ' . implode(', ', $missing));
+                return back()->with(
+                    'error',
+                    'Format file tidak sesuai template. Kolom wajib yang belum ada: ' . implode(', ', $missing) . '. Gunakan template CSV dari halaman impor.'
+                );
             }
 
             // Process each row
@@ -375,8 +414,53 @@ class ResultController extends Controller
             }
 
             return back()->with('success', $msg);
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal memproses file: ' . $e->getMessage());
         }
+    }
+
+    private function validateImportFile(UploadedFile $file): void
+    {
+        if ((int) $file->getSize() === 0) {
+            throw ValidationException::withMessages([
+                'file' => 'File yang diunggah kosong. Isi file terlebih dahulu sesuai template impor.',
+            ]);
+        }
+
+        $extension = strtolower($file->getClientOriginalExtension());
+
+        if (! in_array($extension, self::IMPORT_ALLOWED_EXTENSIONS, true)) {
+            throw ValidationException::withMessages([
+                'file' => 'Format file tidak didukung. Gunakan file CSV, TXT, XLSX, atau XLS.',
+            ]);
+        }
+    }
+
+    private function normalizeImportHeader(array $row): array
+    {
+        $header = array_map(function ($value) {
+            return strtolower(trim((string) $value));
+        }, $row);
+
+        if (isset($header[0])) {
+            $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', $header[0]);
+        }
+
+        return $header;
+    }
+
+    private function hasImportDataRows(array $rows): bool
+    {
+        foreach (array_slice($rows, 1) as $row) {
+            foreach ((array) $row as $value) {
+                if (trim((string) $value) !== '') {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
