@@ -14,8 +14,8 @@ class ResultController extends Controller
     private const IMPORT_ALLOWED_EXTENSIONS = ['csv', 'txt', 'xlsx', 'xls'];
 
     private const IMPORT_REQUIRED_COLUMNS = [
-        'nama',
         'email',
+        'nama',
         'gender',
         'umur',
         'jenjang',
@@ -215,11 +215,11 @@ class ResultController extends Controller
                 'mw' => (float) $submission->mw,
                 'tsukamoto' => [
                     'nilai' => $tsukamotoNilai,
-                    'kategori' => $submission->tsukamoto_kategori ?: $this->getCategory($tsukamotoNilai),
+                    'kategori' => $this->getCategory($tsukamotoNilai),
                 ],
                 'mamdani' => [
                     'nilai' => $mamdaniNilai,
-                    'kategori' => $submission->mamdani_kategori ?: $this->getCategory($mamdaniNilai),
+                    'kategori' => $this->getCategory($mamdaniNilai),
                 ],
                 'selisih' => $submission->selisih !== null
                     ? (float) $submission->selisih
@@ -342,6 +342,13 @@ class ResultController extends Controller
                         continue;
                     }
 
+                    $status = $this->normalizeImportStatus($data['status'] ?? '');
+                    if ($status === null) {
+                        $errors[] = "Baris " . ($i + 1) . ": Status harus Proses/Selesai atau label lengkap dari formulir";
+                        continue;
+                    }
+                    $data['status'] = $status;
+
                     // Validate answers (q1-q10)
                     $answers = [];
                     $validAnswers = true;
@@ -449,6 +456,20 @@ class ResultController extends Controller
         }
 
         return $header;
+    }
+
+    private function normalizeImportStatus(string $status): ?string
+    {
+        $normalized = strtolower(trim($status));
+        $normalized = preg_replace('/\s+/', ' ', $normalized);
+
+        return match ($normalized) {
+            'proses',
+            'sedang menyusun skripsi' => 'Proses',
+            'selesai',
+            'sudah menyelesaikan skripsi' => 'Selesai',
+            default => null,
+        };
     }
 
     private function hasImportDataRows(array $rows): bool

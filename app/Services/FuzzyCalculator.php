@@ -120,7 +120,7 @@ class FuzzyCalculator
             return 'Rendah';
         }
 
-        if ($value <= 70) {
+        if ($value < 70) {
             return 'Sedang';
         }
 

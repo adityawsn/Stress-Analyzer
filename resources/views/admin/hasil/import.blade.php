@@ -157,10 +157,10 @@
                                             <h6 class="fw-bold mb-2">Data Diri</h6>
                                             <div class="list-group list-group-flush">
                                                 <div class="list-group-item border-0 py-1 px-0">
-                                                    <i class="bi bi-check-circle-fill text-success me-2"></i> Nama
+                                                    <i class="bi bi-check-circle-fill text-success me-2"></i> Email
                                                 </div>
                                                 <div class="list-group-item border-0 py-1 px-0">
-                                                    <i class="bi bi-check-circle-fill text-success me-2"></i> Email
+                                                    <i class="bi bi-check-circle-fill text-success me-2"></i> Nama
                                                 </div>
                                                 <div class="list-group-item border-0 py-1 px-0">
                                                     <i class="bi bi-check-circle-fill text-success me-2"></i> Gender
@@ -240,7 +240,7 @@
                                 <label class="form-label small fw-bold text-muted">Header (Baris Pertama)</label>
                                 <div class="bg-light p-2 rounded overflow-auto"
                                     style="font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.5;">
-                                    nama,email,gender,umur,jenjang,kampus,jurusan,prodi,status,tahun,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10
+                                    email,nama,gender,umur,jenjang,kampus,jurusan,prodi,status,tahun,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10
                                 </div>
                             </div>
 
@@ -249,7 +249,7 @@
                                 <label class="form-label small fw-bold text-muted">Contoh Data</label>
                                 <div class="bg-light p-2 rounded overflow-auto"
                                     style="font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.5;">
-                                    Aditya,aditya@gmail.com,Laki-laki,21,D4 / S1,Politeknik Negeri Indramayu,Teknik
+                                    aditya@gmail.com,Aditya,Laki-laki,21,D4 / S1,Politeknik Negeri Indramayu,Teknik
                                     Informatika,RPL,Proses,2026,5,3,4,2,2,5,5,4,2,5
                                 </div>
                             </div>
@@ -265,7 +265,7 @@
                                 <div class="col-6">
                                     <div class="alert alert-light border small py-2 px-3 mb-0">
                                         <strong class="d-block text-dark small mb-1">Status</strong>
-                                        <small class="text-muted">Proses / Selesai</small>
+                                        <small class="text-muted">Proses / Selesai, atau label lengkap dari formulir</small>
                                     </div>
                                 </div>
                             </div>
@@ -361,9 +361,9 @@
     <script>
         function downloadTemplate() {
             const header =
-                'nama,email,gender,umur,jenjang,kampus,jurusan,prodi,status,tahun,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10';
+                'email,nama,gender,umur,jenjang,kampus,jurusan,prodi,status,tahun,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10';
             const example =
-                'Aditya,aditya@gmail.com,Laki-laki,21,D4 / S1,Politeknik Negeri Indramayu,Teknik Informatika,RPL,Proses,2026,5,3,4,2,2,5,5,4,2,5';
+                'aditya@gmail.com,Aditya,Laki-laki,21,D4 / S1,Politeknik Negeri Indramayu,Teknik Informatika,RPL,Proses,2026,5,3,4,2,2,5,5,4,2,5';
             const csv = header + '\n' + example + '\n';
 
             const blob = new Blob([csv], {

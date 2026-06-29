@@ -136,7 +136,7 @@ class DashboardController extends Controller
         $jenjangCounts = $subs->groupBy('jenjang')->map->count()->toArray();
         $orderedJenjang = [
             'D3' => $jenjangCounts['D3'] ?? 0,
-            'D4/S1' => $jenjangCounts['D4 / S1'] ?? 0,
+            'D4/S1' => $jenjangCounts['D4/S1'] ?? 0,
         ];
         $jenjang_labels = array_keys($orderedJenjang);
         $jenjang_values = array_values($orderedJenjang);
@@ -254,11 +254,11 @@ class DashboardController extends Controller
                 'mw' => (float) $submission->mw,
                 'tsukamoto' => [
                     'nilai' => $tsukamotoNilai,
-                    'kategori' => $submission->tsukamoto_kategori ?: $this->getCategory($tsukamotoNilai),
+                    'kategori' => $this->getCategory($tsukamotoNilai),
                 ],
                 'mamdani' => [
                     'nilai' => $mamdaniNilai,
-                    'kategori' => $submission->mamdani_kategori ?: $this->getCategory($mamdaniNilai),
+                    'kategori' => $this->getCategory($mamdaniNilai),
                 ],
                 'selisih' => $submission->selisih !== null
                     ? (float) $submission->selisih
