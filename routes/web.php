@@ -42,7 +42,7 @@ Route::get('/hasil/comparison-image', function (Request $request) {
     $tps = floatval($request->query('tps', 0));
     $mw = floatval($request->query('mw', 0));
     $script = base_path('python/plot_comparison.py');
-    $cmd = 'python ' . escapeshellarg($script) . ' ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
+    $cmd = 'python3 ' . escapeshellarg($script) . ' ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
     $output = null;
     $retval = null;
 
@@ -67,7 +67,7 @@ Route::get('/hasil/tsukamoto-image', function (Request $request) {
     $tps = floatval($request->query('tps', 0));
     $mw = floatval($request->query('mw', 0));
     $script = base_path('python/fuzzy_calculator.py');
-    $cmd = 'python ' . escapeshellarg($script) . ' tsukamoto ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
+    $cmd = 'python3 ' . escapeshellarg($script) . ' tsukamoto ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
     $output = null;
     $retval = null;
 
@@ -85,7 +85,7 @@ Route::get('/hasil/mamdani-image', function (Request $request) {
     $tps = floatval($request->query('tps', 0));
     $mw = floatval($request->query('mw', 0));
     $script = base_path('python/fuzzy_calculator.py');
-    $cmd = 'python ' . escapeshellarg($script) . ' mamdani ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
+    $cmd = 'python3 ' . escapeshellarg($script) . ' mamdani ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
     $output = null;
     $retval = null;
 
