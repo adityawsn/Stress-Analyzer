@@ -249,7 +249,7 @@
                                 <label class="form-label small fw-bold text-muted">Contoh Data</label>
                                 <div class="bg-light p-2 rounded overflow-auto"
                                     style="font-family: 'Courier New', monospace; font-size: 11px; line-height: 1.5;">
-                                    aditya@gmail.com,Aditya,Laki-laki,21,D4 / S1,Politeknik Negeri Indramayu,Teknik
+                                    aditya@gmail.com,Aditya,Laki-laki,21,D4/S1,Politeknik Negeri Indramayu,Teknik
                                     Informatika,RPL,Proses,2026,5,3,4,2,2,5,5,4,2,5
                                 </div>
                             </div>
@@ -363,7 +363,7 @@
             const header =
                 'email,nama,gender,umur,jenjang,kampus,jurusan,prodi,status,tahun,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10';
             const example =
-                'aditya@gmail.com,Aditya,Laki-laki,21,D4 / S1,Politeknik Negeri Indramayu,Teknik Informatika,RPL,Proses,2026,5,3,4,2,2,5,5,4,2,5';
+                'aditya@gmail.com,Aditya,Laki-laki,21,D4/S1,Politeknik Negeri Indramayu,Teknik Informatika,RPL,Proses,2026,5,3,4,2,2,5,5,4,2,5';
             const csv = header + '\n' + example + '\n';
 
             const blob = new Blob([csv], {

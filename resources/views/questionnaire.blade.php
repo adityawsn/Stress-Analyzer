@@ -440,7 +440,7 @@
                         <select id="jenjang" class="form-select" required>
                             <option value="">Pilih Jenjang</option>
                             <option value="D3">D3</option>
-                            <option value="D4 / S1">D4 / S1</option>
+                            <option value="D4/S1">D4/S1</option>
                         </select>
                         <small class="text-danger error-text d-none">Pilih jenjang</small>
                     </div>
