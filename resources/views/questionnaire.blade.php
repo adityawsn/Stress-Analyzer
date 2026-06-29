@@ -5,6 +5,10 @@
 @section('content')
 
     <style>
+        .questionnaire-page {
+            overflow-x: hidden;
+        }
+
         .container-custom {
             max-width: 700px;
             /* sebelumnya 800px atau full */
@@ -80,6 +84,7 @@
             display: flex;
             align-items: center;
             gap: 40px;
+            flex: 0 0 auto;
         }
 
         .option input {
@@ -226,15 +231,153 @@
             margin-top: 4px;
             display: block;
         }
+
+        .questionnaire-header {
+            gap: 1rem;
+        }
+
+        .questionnaire-title {
+            min-width: 0;
+        }
+
+        .questionnaire-actions {
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 767.98px) {
+            .container-custom {
+                max-width: 100%;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .questionnaire-page .container-custom {
+                padding-top: 2rem !important;
+                padding-bottom: 2rem !important;
+            }
+
+            .card-custom {
+                border-radius: 16px;
+                padding: 1.25rem;
+            }
+
+            .questionnaire-header {
+                align-items: flex-start !important;
+            }
+
+            .questionnaire-title,
+            .progress-wrapper {
+                width: 100%;
+            }
+
+            .progress-wrapper {
+                margin-left: 0;
+            }
+
+            .step h5 {
+                font-size: 1rem;
+                line-height: 1.45;
+            }
+
+            .form-control,
+            .form-select {
+                min-height: 46px;
+                font-size: 1rem;
+            }
+
+            .likert-modern {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "scale scale"
+                    "left right";
+                gap: 0.8rem 1rem;
+                margin-bottom: 2rem !important;
+            }
+
+            .label-left {
+                grid-area: left;
+                min-width: 0;
+                font-size: 0.88rem;
+            }
+
+            .label-right {
+                grid-area: right;
+                min-width: 0;
+                font-size: 0.88rem;
+            }
+
+            .scale {
+                grid-area: scale;
+                justify-content: space-between;
+                width: 100%;
+                gap: 0.5rem;
+            }
+
+            .option {
+                min-width: 42px;
+                min-height: 42px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .option:hover .circle {
+                transform: none;
+            }
+
+            .questionnaire-actions {
+                flex-direction: column;
+            }
+
+            .questionnaire-actions .btn {
+                width: 100%;
+                margin-left: 0 !important;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .card-custom {
+                padding: 1rem;
+            }
+
+            .scale {
+                gap: 0.25rem;
+            }
+
+            .circle-1,
+            .circle-5 {
+                width: 36px;
+                height: 36px;
+            }
+
+            .circle-2,
+            .circle-4 {
+                width: 30px;
+                height: 30px;
+            }
+
+            .circle-3 {
+                width: 24px;
+                height: 24px;
+            }
+
+            .label-left,
+            .label-right {
+                font-size: 0.82rem;
+            }
+        }
     </style>
+
+    <main class="questionnaire-page">
 
     <div class="container container-custom py-5">
 
         <!-- Progress -->
-        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+        <div class="questionnaire-header d-flex justify-content-between align-items-center mb-3 flex-wrap">
 
             <!-- KIRI (Judul) -->
-            <div>
+            <div class="questionnaire-title">
                 <h5 class="mb-1 fw-bold">
                     Survei Tingkat Stres Mahasiswa
                 </h5>
@@ -393,7 +536,7 @@
                 @endforeach
 
                 <!-- Button -->
-                <div class="d-flex mt-4">
+                <div class="questionnaire-actions d-flex mt-4">
                     <button type="button" id="prevBtn" class="btn btn-secondary btn-custom">
                         ← Sebelumnya
                     </button>
@@ -406,6 +549,7 @@
             </form>
         </div>
     </div>
+    </main>
 
 
     <script id="multi-step-form">

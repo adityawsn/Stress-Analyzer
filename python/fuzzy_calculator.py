@@ -106,7 +106,7 @@ def hitung_tsukamoto(tps, mw):
         value = sum(r * z for r, z in zip(rules, z_values)) / alpha_sum
 
     value = round(value, 2)
-    kategori = "Rendah" if value <= 30 else ("Sedang" if value <= 70 else "Tinggi")
+    kategori = "Rendah" if value <= 30 else ("Tinggi" if value >= 70 else "Sedang")
 
     return {"nilai": value, "kategori": kategori}
 
@@ -145,7 +145,7 @@ def hitung_mamdani(tps, mw):
     denominator = np.sum(aggregated)
     value = 0.0 if denominator == 0 else numerator / denominator
     value = round(float(value), 2)
-    kategori = "Rendah" if value < 30 else ("Sedang" if value <= 70 else "Tinggi")
+    kategori = "Rendah" if value <= 30 else ("Tinggi" if value >= 70 else "Sedang")
 
     return {"nilai": value, "kategori": kategori}
 

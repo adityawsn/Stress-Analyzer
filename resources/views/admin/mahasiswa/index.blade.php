@@ -65,6 +65,30 @@
             border-radius: 4px;
         }
 
+        .students-toolbar {
+            gap: 1rem;
+        }
+
+        .students-search {
+            width: min(500px, 46vw);
+        }
+
+        .students-table th {
+            white-space: nowrap;
+        }
+
+        .students-table td {
+            vertical-align: middle;
+        }
+
+        .student-detail-btn {
+            white-space: nowrap;
+        }
+
+        .students-pagination {
+            gap: 1rem;
+        }
+
         @media (max-width: 991.98px) {
             #sidebar {
                 left: -260px;
@@ -76,6 +100,195 @@
 
             #main-content {
                 margin-left: 0;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            #main-content {
+                padding: 14px;
+            }
+
+            .top-nav {
+                padding: 10px 16px;
+                margin: -14px -14px 16px -14px;
+            }
+
+            .students-toolbar {
+                align-items: stretch !important;
+                flex-direction: column;
+                margin-bottom: 1rem !important;
+            }
+
+            .students-search {
+                width: 100%;
+            }
+
+            .students-search .form-control {
+                min-height: 42px;
+            }
+
+            .students-search .btn {
+                min-width: 74px;
+            }
+
+            .data-card {
+                background: transparent;
+                border-radius: 14px;
+                box-shadow: none !important;
+                overflow: visible;
+            }
+
+            .students-table-wrapper {
+                overflow: visible;
+                padding-bottom: 0.25rem;
+            }
+
+            .students-table {
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .students-table thead {
+                display: none;
+            }
+
+            .students-table,
+            .students-table tbody,
+            .students-table tr,
+            .students-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .students-table tbody tr {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 14px;
+                box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+                margin-bottom: 16px;
+                overflow: hidden;
+            }
+
+            .students-table tbody tr:last-child {
+                margin-bottom: 0;
+            }
+
+            .students-table tbody td {
+                border-bottom: 1px solid #f1f5f9;
+                display: flex;
+                justify-content: space-between;
+                gap: 1rem;
+                padding: 0.85rem 1rem !important;
+                text-align: right !important;
+            }
+
+            .students-table tbody td::before {
+                content: attr(data-label);
+                color: #64748b;
+                flex: 0 0 38%;
+                font-size: 0.76rem;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                text-align: left;
+                text-transform: uppercase;
+            }
+
+            .students-table tbody td:last-child {
+                border-bottom: 0;
+            }
+
+            .students-table .student-identity {
+                background: #f8fafc;
+                display: block;
+                text-align: left !important;
+            }
+
+            .students-table .student-identity::before {
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+
+            .students-table .student-identity .d-flex {
+                align-items: flex-start !important;
+            }
+
+            .students-table .student-action {
+                display: block;
+                text-align: left !important;
+            }
+
+            .students-table .student-action::before {
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+
+            .students-table .student-action .btn-group,
+            .student-detail-btn {
+                width: 100%;
+            }
+
+            .student-detail-btn {
+                border-radius: 999px !important;
+            }
+
+            .students-table .empty-state-row {
+                border: 1px dashed #cbd5e1;
+                box-shadow: none;
+            }
+
+            .students-table .empty-state-row td {
+                display: block;
+                text-align: center !important;
+            }
+
+            .students-table .empty-state-row td::before {
+                content: none;
+            }
+
+            .students-pagination {
+                align-items: stretch !important;
+                background: white !important;
+                border-radius: 14px;
+                justify-content: center !important;
+                padding: 1rem !important;
+            }
+
+            .students-pagination nav,
+            .students-pagination .pagination {
+                width: 100%;
+            }
+
+            .students-pagination .pagination {
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-bottom: 0;
+            }
+
+            .modal-body table,
+            .modal-body tbody,
+            .modal-body tr,
+            .modal-body td {
+                display: block;
+                width: 100% !important;
+            }
+
+            .modal-body td {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .students-search {
+                flex-direction: column;
+            }
+
+            .students-search .form-control {
+                margin-right: 0 !important;
+            }
+
+            .students-search .btn {
+                width: 100%;
             }
         }
     </style>
@@ -100,7 +313,7 @@
         </header>
 
         <div class="container-fluid py-2">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="students-toolbar d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h4 class="fw-bold mb-0">Daftar Mahasiswa Teranalisis</h4>
                     <p class="text-muted small mb-0">
@@ -118,7 +331,7 @@
                     </button>
                 </div> --}}
 
-                <form method="GET" action="{{ url()->current() }}" class="d-flex" role="search" style="width: 500px;">
+                <form method="GET" action="{{ url()->current() }}" class="students-search d-flex" role="search">
                     <input type="search" name="q" value="{{ request('q') }}"
                         class="form-control form-control-sm me-2" placeholder="Cari nama, kampus, jurusan, atau prodi...">
                     <button type="submit" class="btn btn-primary btn-sm">Cari</button>
@@ -127,8 +340,8 @@
 
             <!-- Data Mahasiswa -->
             <div class="data-card shadow-sm border-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                <div class="table-responsive students-table-wrapper">
+                    <table class="table table-hover align-middle mb-0 students-table">
                         <thead class="bg-light">
                             <tr class="small text-muted text-uppercase">
                                 <th class="ps-4 py-3">Nama Mahasiswa</th>
@@ -141,7 +354,7 @@
                         </thead>
                         <tbody>
                             @if ($students->isEmpty())
-                                <tr>
+                                <tr class="empty-state-row">
                                     <td colspan="6" class="text-center text-muted py-4">
                                         Belum ada data mahasiswa.
                                     </td>
@@ -162,7 +375,7 @@
                                         $program = $student->prodi ?: $student->jurusan;
                                     @endphp
                                     <tr>
-                                        <td class="ps-4">
+                                        <td class="ps-4 student-identity" data-label="Mahasiswa">
                                             <div class="d-flex align-items-center gap-3">
                                                 <div class="avatar-circle">{{ $initials }}</div>
                                                 <div>
@@ -171,13 +384,13 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{{ $student->kampus }}</td>
-                                        <td>{{ $program }}</td>
-                                        <td>{{ $student->status_label }}</td>
-                                        <td>{{ $student->tahun }}</td>
-                                        <td class="text-end pe-4">
+                                        <td data-label="Kampus">{{ $student->kampus }}</td>
+                                        <td data-label="Program Studi">{{ $program }}</td>
+                                        <td data-label="Status">{{ $student->status_label }}</td>
+                                        <td data-label="Tahun">{{ $student->tahun }}</td>
+                                        <td class="text-end pe-4 student-action" data-label="Aksi">
                                             <div class="btn-group shadow-sm rounded-pill overflow-hidden border">
-                                                <button class="btn btn-white btn-sm px-3"
+                                                <button class="btn btn-white btn-sm px-3 student-detail-btn"
                                                     onclick="showFullDetail('{{ addslashes($student->nama) }}', '{{ $student->gender }}', '{{ $student->email }}', {{ $student->umur }}, '{{ $student->jenjang }}', '{{ addslashes($student->kampus) }}', '{{ addslashes($student->jurusan) }}', '{{ addslashes($student->prodi) }}', '{{ $student->status_label }}', {{ $student->tahun }})">Detail</button>
                                             </div>
                                         </td>
@@ -188,7 +401,7 @@
                     </table>
                 </div>
                 @if ($students->hasPages())
-                    <div class="p-3 border-top bg-light d-flex justify-content-end">
+                    <div class="p-3 border-top bg-light d-flex justify-content-end students-pagination">
                         {{ $students->links('pagination::bootstrap-5') }}
                     </div>
                 @endif

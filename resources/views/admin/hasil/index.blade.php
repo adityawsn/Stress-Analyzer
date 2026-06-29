@@ -99,10 +99,192 @@
             font-style: italic;
         }
 
+        .results-toolbar {
+            gap: 1rem;
+        }
+
+        .results-actions {
+            gap: 0.75rem;
+        }
+
+        .results-search {
+            width: min(350px, 42vw);
+        }
+
+        .results-table th {
+            white-space: nowrap;
+        }
+
+        .results-table td {
+            vertical-align: middle;
+        }
+
+        .result-action-btn {
+            white-space: nowrap;
+        }
+
+        .results-pagination {
+            gap: 1rem;
+        }
+
         @media (max-width: 991.98px) {
             #sidebar { left: -260px; }
             #sidebar.active { left: 0; }
             #main-content { margin-left: 0; }
+        }
+
+        @media (max-width: 767.98px) {
+            #main-content {
+                padding: 14px;
+            }
+
+            .top-nav {
+                padding: 10px 16px;
+                margin: -14px -14px 16px -14px;
+            }
+
+            .results-toolbar {
+                align-items: stretch !important;
+                flex-direction: column;
+                margin-bottom: 1rem !important;
+            }
+
+            .results-actions {
+                flex-wrap: wrap;
+            }
+
+            .results-search {
+                width: 100%;
+                flex: 1 0 100%;
+            }
+
+            .results-actions .btn {
+                flex: 1 1 0;
+            }
+
+            .data-card {
+                border-radius: 14px;
+                background: transparent;
+                box-shadow: none !important;
+                overflow: visible;
+            }
+
+            .results-table-wrapper {
+                overflow: visible;
+                padding-bottom: 0.25rem;
+            }
+
+            .results-table {
+                border-collapse: separate;
+                border-spacing: 0;
+            }
+
+            .results-table thead {
+                display: none;
+            }
+
+            .results-table,
+            .results-table tbody,
+            .results-table tr,
+            .results-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .results-table tbody tr {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 14px;
+                box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+                overflow: hidden;
+                margin-bottom: 16px;
+            }
+
+            .results-table tbody tr:last-child {
+                margin-bottom: 0;
+            }
+
+            .results-table tbody td {
+                border-bottom: 1px solid #f1f5f9;
+                display: flex;
+                justify-content: space-between;
+                gap: 1rem;
+                padding: 0.85rem 1rem !important;
+                text-align: right !important;
+            }
+
+            .results-table tbody td::before {
+                content: attr(data-label);
+                color: #64748b;
+                flex: 0 0 42%;
+                font-size: 0.76rem;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                text-align: left;
+                text-transform: uppercase;
+            }
+
+            .results-table tbody td:last-child {
+                border-bottom: 0;
+            }
+
+            .results-table .result-identity {
+                background: #f8fafc;
+                display: block;
+                text-align: left !important;
+            }
+
+            .results-table .result-identity::before {
+                display: block;
+                margin-bottom: 0.35rem;
+            }
+
+            .results-table .result-action {
+                display: block;
+                text-align: left !important;
+            }
+
+            .results-table .result-action::before {
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+
+            .result-action-btn {
+                width: 100%;
+            }
+
+            .results-table .empty-state-row {
+                border: 1px dashed #cbd5e1;
+                box-shadow: none;
+            }
+
+            .results-table .empty-state-row td {
+                display: block;
+                text-align: center !important;
+            }
+
+            .results-table .empty-state-row td::before {
+                content: none;
+            }
+
+            .results-pagination {
+                align-items: stretch !important;
+                background: white !important;
+                border-radius: 14px;
+                flex-direction: column;
+                padding: 1rem !important;
+            }
+
+            .results-pagination nav,
+            .results-pagination .pagination {
+                width: 100%;
+            }
+
+            .results-pagination .pagination {
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-bottom: 0;
+            }
         }
     </style>
 
@@ -125,16 +307,16 @@
         </header>
 
         <div class="container-fluid py-2">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <div>
+            <div class="results-toolbar d-flex justify-content-between align-items-center mb-4">
+                <div>
                     <h4 class="fw-bold mb-0">Tabulasi Data Kuesioner</h4>
                     <p class="text-muted small mb-0">
                         Input variabel X1 (Tekanan) & X2 (Manajemen Waktu) untuk komparasi Fuzzy.
                     </p>
                 </div>
 
-                <div class="d-flex gap-3">
-                    <form method="GET" action="{{ url()->current() }}" style="width: 350px;">
+                <div class="results-actions d-flex">
+                    <form method="GET" action="{{ url()->current() }}" class="results-search">
                         <input type="search" name="q" value="{{ request('q') }}" class="form-control form-control-sm" placeholder="Cari responden...">
                     </form>
                     <a href="{{ route('hasil.import') }}" class="btn btn-sm btn-light border rounded-pill">
@@ -148,8 +330,8 @@
 
             <!-- Questionnaire Table with Comparative Results -->
             <div class="data-card shadow-sm border-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                <div class="table-responsive results-table-wrapper">
+                    <table class="table table-hover align-middle mb-0 results-table">
                         <thead class="bg-light text-muted">
                             <tr class="small text-uppercase">
                                 <th class="ps-4 py-3">Identitas Responden</th>
@@ -162,7 +344,7 @@
                         </thead>
                         <tbody>
                             @if($results->isEmpty())
-                                <tr>
+                                <tr class="empty-state-row">
                                     <td colspan="6" class="text-center text-muted py-4">
                                         Belum ada data kuesioner.
                                     </td>
@@ -180,28 +362,28 @@
                                         $mandColor = $result->mamdani['kategori'] === 'Tinggi' ? 'text-danger' : ($result->mamdani['kategori'] === 'Sedang' ? 'text-warning' : 'text-success');
                                     @endphp
                                     <tr>
-                                        <td class="ps-4">
+                                        <td class="ps-4 result-identity" data-label="Responden">
                                             <div class="fw-bold">{{ $result->nama }}</div>
                                             <div class="table-indicator">{{ $result->kampus }} - {{ $result->prodi }}</div>
                                         </td>
-                                        <td>
+                                        <td data-label="Tekanan (X1)">
                                             <div class="fw-bold">{{ number_format($result->tps, 2) }}</div>
                                             <div class="table-indicator {{ $tpsCatColor }}">{{ $tpsCat }}</div>
                                         </td>
-                                        <td>
+                                        <td data-label="Manajemen (X2)">
                                             <div class="fw-bold">{{ number_format($result->mw, 2) }}</div>
                                             <div class="table-indicator {{ $mwCatColor }}">{{ $mwCat }}</div>
                                         </td>
-                                        <td>
+                                        <td data-label="Tsukamoto">
                                             <span class="fw-bold {{ $tsukColor }}">{{ number_format($result->tsukamoto['nilai'], 2) }}</span>
                                             <div class="table-indicator">{{ $result->tsukamoto['kategori'] }}</div>
                                         </td>
-                                        <td>
+                                        <td data-label="Mamdani">
                                             <span class="fw-bold {{ $mandColor }}">{{ number_format($result->mamdani['nilai'], 2) }}</span>
                                             <div class="table-indicator">{{ $result->mamdani['kategori'] }}</div>
                                         </td>
-                                        <td class="text-end pe-4">
-                                            <button class="btn btn-sm btn-light border rounded-pill" onclick="showComparativeDetail({{ $result->id }})">
+                                        <td class="text-end pe-4 result-action" data-label="Aksi">
+                                            <button class="btn btn-sm btn-light border rounded-pill result-action-btn" onclick="showComparativeDetail({{ $result->id }})">
                                                 <i class="bi bi-intersect"></i> Bandingkan
                                             </button>
                                         </td>
@@ -212,7 +394,7 @@
                     </table>
                 </div>
                 <!-- Pagination -->
-                <div class="p-4 border-top bg-light d-flex justify-content-between align-items-center">
+                <div class="p-4 border-top bg-light d-flex justify-content-between align-items-center results-pagination">
                     <small class="text-muted">Total {{ $results->total() }} Responden</small>
                     <nav>
                         {{ $results->links('pagination::bootstrap-5') }}
