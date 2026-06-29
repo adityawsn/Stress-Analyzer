@@ -42,23 +42,21 @@ Route::get('/hasil/comparison-image', function (Request $request) {
     $tps = floatval($request->query('tps', 0));
     $mw = floatval($request->query('mw', 0));
 
-    // 1. Point to the python executable inside the virtual environment
-    $pythonPath = base_path('venv/bin/python');
     $script = base_path('python/plot_comparison.py');
+    // Langsung panggil python3 global yang ada di dalam container
+    $cmd = 'python3 ' . escapeshellarg($script) . ' ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
 
-    // 2. Use the exact pythonPath instead of "python3"
-    $cmd = escapeshellcmd($pythonPath) . ' ' . escapeshellarg($script) . ' ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
     $output = null;
     $retval = null;
 
     exec($cmd, $output, $retval);
+
     if ($retval !== 0 || empty($output)) {
         abort(500, 'Gagal membuat grafik perbandingan.');
     }
 
     $png = base64_decode(implode('', $output));
-    return response($png, 200)
-        ->header('Content-Type', 'image/png');
+    return response($png, 200)->header('Content-Type', 'image/png');
 });
 
 Route::get('/hasil/calculate', function (Request $request, FuzzyCalculator $fuzzyCalculator) {
@@ -72,27 +70,17 @@ Route::get('/hasil/tsukamoto-image', function (Request $request) {
     $tps = floatval($request->query('tps', 0));
     $mw = floatval($request->query('mw', 0));
 
-    $pythonPath = base_path('venv/bin/python');
     $script = base_path('python/fuzzy_calculator.py');
-
-    $cmd = escapeshellcmd($pythonPath) . ' ' . escapeshellarg($script) . ' tsukamoto ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
-
-    // IMPORTANT: Append 2>&1 to capture the raw error message from the server
-    $cmd .= ' 2>&1';
+    // Langsung panggil python3 global yang ada di dalam container
+    $cmd = 'python3 ' . escapeshellarg($script) . ' tsukamoto ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
 
     $output = null;
     $retval = null;
 
     exec($cmd, $output, $retval);
 
-    // DUMP THE ERROR TO THE SCREEN INSTEAD OF THROWING A 500 ABORT
     if ($retval !== 0 || empty($output)) {
-        return response()->json([
-            'status' => 'FAILED',
-            'exit_code' => $retval,
-            'command_attempted' => $cmd,
-            'server_output' => $output
-        ]);
+        abort(500, 'Gagal membuat grafik Tsukamoto.');
     }
 
     $png = base64_decode(implode('', $output));
@@ -103,26 +91,22 @@ Route::get('/hasil/mamdani-image', function (Request $request) {
     $tps = floatval($request->query('tps', 0));
     $mw = floatval($request->query('mw', 0));
 
-    // 1. Point to the python executable inside the virtual environment
-    $pythonPath = base_path('venv/bin/python');
     $script = base_path('python/fuzzy_calculator.py');
+    // Langsung panggil python3 global yang ada di dalam container
+    $cmd = 'python3 ' . escapeshellarg($script) . ' mamdani ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
 
-    // 2. Use the exact pythonPath instead of "python3"
-    $cmd = escapeshellcmd($pythonPath) . ' ' . escapeshellarg($script) . ' mamdani ' . escapeshellarg($tps) . ' ' . escapeshellarg($mw);
     $output = null;
     $retval = null;
 
     exec($cmd, $output, $retval);
+
     if ($retval !== 0 || empty($output)) {
         abort(500, 'Gagal membuat grafik Mamdani.');
     }
 
     $png = base64_decode(implode('', $output));
-    return response($png, 200)
-        ->header('Content-Type', 'image/png');
+    return response($png, 200)->header('Content-Type', 'image/png');
 });
-
-
 
 
 // ============================================
