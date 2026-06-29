@@ -2,6 +2,9 @@ import sys
 import base64
 import io
 import json
+import os
+
+os.environ['MPLCONFIGDIR'] = '/tmp/'
 
 import matplotlib
 matplotlib.use('Agg')
